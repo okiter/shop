@@ -1,0 +1,14 @@
+1. 项目是基于thinkphp, 那么必须安装thnkphp的规范.
+    http://document.thinkphp.cn/manual_3_2.html#develop_standard
+2. 表中字段规范:
+   name:   表示名称. 例如: 品牌名称, 商品名称
+   intro:  表示简介
+   sort:   表示排序   数字,  数字越小,越靠前  -1
+   status: 表示状态   -1: 删除  0:不在前台显示,只在当前列表中显示   1: 正常
+
+   删除一行数据:
+   update 表名 set status = -1 where id  = xx
+   显示列表:
+   select * from 表名  where status>-1
+   在前台显示数据:
+   select * from 表名  where status=1
