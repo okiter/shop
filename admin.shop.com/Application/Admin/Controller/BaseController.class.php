@@ -24,6 +24,11 @@ abstract class BaseController extends Controller
     protected $model;
 
     /**
+     * 主要是被子类覆盖,提供自己的标题
+     * @var string
+     */
+    protected $meta_title = '';
+    /**
      * 定义_initialize方法, 让父类的构造函数调用执行.
      */
     public function _initialize(){
@@ -56,6 +61,8 @@ abstract class BaseController extends Controller
         //保存当前请求的url地址到cookie中,为了做其他操作再通过该url回去...
         cookie('__forward__', $_SERVER['REQUEST_URI']);
 
+        //显示出当前列表的标题
+        $this->assign('meta_title',$this->meta_title);
         $this->display('index');
     }
 
@@ -70,6 +77,7 @@ abstract class BaseController extends Controller
             }
             $this->error('保存失败!' . showModelError($this->model));
         } else {
+            $this->assign('meta_title','添加'.$this->meta_title);
             $this->display('edit');
         }
     }
@@ -87,6 +95,7 @@ abstract class BaseController extends Controller
         } else {
             $row = $this->model->find($id);
             $this->assign($row);
+            $this->assign('meta_title','编辑'.$this->meta_title);
             $this->display('edit');
         }
     }/**
