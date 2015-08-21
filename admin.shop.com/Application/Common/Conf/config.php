@@ -9,6 +9,6 @@ return array(
     'DB_PREFIX'             =>  '',    // 数据库表前缀
     'DB_PARAMS'          	=>  array(), // 数据库连接参数
 
-
+    'PAGE_SIZE'             =>  2, //分页中每页显示的条数
 
 );
