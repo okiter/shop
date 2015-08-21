@@ -102,12 +102,22 @@ abstract class BaseController extends Controller
      * 改变一行数据的状态
      * @param $id
      * @param $status  -1 表示删除
- */
+     *
+     *
+     *  success和error的特点:
+     *  当浏览器通过jquery的ajax访问时,这两个方法返回的是一个 json对象
+     *  Object {info: "操作成功!", status: 1, url: "/index.php/Supplier/index/p/1.html"}
+     *   info: 表示提示信息
+     *   status: 表示状态,  如果使用success方法, status就是1
+     *   status: 表示状态,  如果使用error方法, status就是0
+     *   url:   表示状态,   需要跳转的url
+     */
     public function changeStatus($id, $status = -1)
     {
-        if ($this->model->changeStatus($id, $status) !== false) {
+      if ($this->model->changeStatus($id, $status) !== false) {
             $this->success('操作成功!', cookie('__forward__'));
         } else {
             $this->error('操作失败!');
         }
+
     }}

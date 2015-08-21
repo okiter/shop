@@ -52,7 +52,7 @@ abstract class BaseModel extends Model
      */
     public function changeStatus($id, $status)
     {
-        $data = array('id' => $id, 'status' => $status);
+        $data = array('id' => array('in',$id), 'status' => $status);
         if ($status == -1) {
             $data['name'] = array('exp', 'concat(name,"_del")');
         }
