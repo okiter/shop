@@ -19,7 +19,7 @@ class SupplierModel extends Model
     // 自动验证定义
     protected $_validate        =   array(
         array('name','require','名称不能够为空!'),
-        array('name','','名称不能够为空!',self::EXISTS_VALIDATE,'unique')
+        array('name','','名称已经存在,请更改!',self::EXISTS_VALIDATE,'unique')
     );
     /**
      * 查询出需要在列表中显示的数据
@@ -37,6 +37,10 @@ class SupplierModel extends Model
      * @return bool
      */
     public function changeStatus($id, $status){
-        return parent::save(array('id'=>$id,'status'=>$status));
+        $data  = array('id'=>$id,'status'=>$status);
+        if($status==-1){
+            $data['name'] = array('exp','concat(name,"_del")');
+        }
+        return parent::save($data);
     }
 }
