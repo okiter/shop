@@ -16,6 +16,15 @@ class SupplierController extends Controller
 
     public function index()
     {
+
+        //>>3.存放查询条件
+        $wheres = array();
+        //>>2.接收查询参数
+        $keyword = I('get.keyword','');
+        if(!empty($keyword)){
+            $wheres['name'] =  array('like',"%{$keyword}%");
+        }
+
         $model = D('Supplier');
         //>>1.需要$model提供分页中需要使用的数据
         /**
@@ -25,7 +34,7 @@ class SupplierController extends Controller
          *  pageHtml=>'分页工具条'
          * )
          */
-        $pageResult = $model->getPageResult();
+        $pageResult = $model->getPageResult($wheres);
         $this->assign($pageResult);
 
         //保存当前请求的url地址到cookie中,为了做其他操作再通过该url回去...

@@ -52,11 +52,12 @@ class SupplierModel extends Model
         rows=>分页列表中的数据
      *  pageHtml=>'分页工具条'
      * )
+     *
+     * @param $wheres array  查询条件
      */
-    public function getPageResult(){
+    public function getPageResult($wheres=array()){
 
         //过滤没有被删除的数据
-        $wheres = array();
         $wheres['status'] = array('gt',-1);
 
         //>>1.提供$pageHtml的值
