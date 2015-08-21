@@ -11,8 +11,7 @@ namespace Admin\Controller;
 
 use Think\Controller;
 
-class SupplierController extends BaseController
+class BrandController extends BaseController
 {
-
 
 }
