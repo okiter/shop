@@ -11,6 +11,11 @@ namespace Admin\Controller;
 
 use Think\Controller;
 
+/**
+ * 设置为abstract主要是被子类继承而不直接创建对象
+ * Class BaseController
+ * @package Admin\Controller
+ */
 abstract class BaseController extends Controller
 {
     /**
