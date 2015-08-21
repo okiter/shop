@@ -27,6 +27,10 @@ class SupplierController extends Controller
          */
         $pageResult = $model->getPageResult();
         $this->assign($pageResult);
+
+        //保存当前请求的url地址到cookie中,为了做其他操作再通过该url回去...
+        cookie('__forward__',$_SERVER['REQUEST_URI']);
+
         $this->display('index');
     }
 
@@ -54,7 +58,7 @@ class SupplierController extends Controller
         if (IS_POST) {
             if ($model->create() !== false) { //1.接收数据  2.自动验证  3.自动完成
                 if ($model->save() !== false) {
-                    $this->success('更新成功!', U('index'));
+                    $this->success('更新成功!', cookie('__forward__'));
                     return;
                 }
             }
@@ -75,7 +79,7 @@ class SupplierController extends Controller
     {
         $model = D('Supplier');
         if ($model->changeStatus($id, $status) !== false) {
-            $this->success('操作成功!', U('index'));
+            $this->success('操作成功!', cookie('__forward__'));
         } else {
             $this->error('操作失败!');
         }
