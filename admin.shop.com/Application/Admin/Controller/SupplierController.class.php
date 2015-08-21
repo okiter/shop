@@ -17,8 +17,16 @@ class SupplierController extends Controller
     public function index()
     {
         $model = D('Supplier');
-        $rows = $rows = $model->getList();
-        $this->assign('rows', $rows);
+        //>>1.需要$model提供分页中需要使用的数据
+        /**
+         * 分页数据:
+         * array(
+            rows=>分页列表中的数据
+         *  pageHtml=>'分页工具条'
+         * )
+         */
+        $pageResult = $model->getPageResult();
+        $this->assign($pageResult);
         $this->display('index');
     }
 

@@ -10,6 +10,7 @@ namespace Admin\Model;
 
 
 use Think\Model;
+use Think\Page;
 
 class SupplierModel extends Model
 {
@@ -42,5 +43,33 @@ class SupplierModel extends Model
             $data['name'] = array('exp','concat(name,"_del")');
         }
         return parent::save($data);
+    }
+
+    /**
+     * 返回分页所需要的数据:
+     *  * 分页数据:
+     * array(
+        rows=>分页列表中的数据
+     *  pageHtml=>'分页工具条'
+     * )
+     */
+    public function getPageResult(){
+
+        //过滤没有被删除的数据
+        $wheres = array();
+        $wheres['status'] = array('gt',-1);
+
+        //>>1.提供$pageHtml的值
+        $count = $this->where($wheres)->count();
+        $pageSize = 2;
+        $page = new Page($count,$pageSize);
+        //当总条数大于每页多少条时再显示总条数
+        if($page->totalRows>$page->listRows){
+            $page->setConfig('theme', '%FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END% %HEADER%');
+        }
+        $pageHtml = $page->show();
+        //>>2.提供$rows的值,当前页的数据
+        $rows = $this->limit($page->firstRow,$page->listRows)->where($wheres)->select();
+        return array('rows'=>$rows,'pageHtml'=>$pageHtml);
     }
 }

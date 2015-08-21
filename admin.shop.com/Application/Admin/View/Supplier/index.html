@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="__CSS__/general.css" rel="stylesheet" type="text/css" />
 <link href="__CSS__/main.css" rel="stylesheet" type="text/css" />
+<link href="__CSS__/page.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <h1>
@@ -45,26 +46,8 @@
                 </td>
             </tr>
             </volist>
-            <tr>
-                <td align="right" nowrap="true" colspan="6">
-                    <div id="turn-page">
-                        总计 <span id="totalRecords">11</span>
-                        个记录分为 <span id="totalPages">1</span>
-                        页当前第 <span id="pageCurrent">1</span>
-                        页，每页 <input type='text' size='3' id='pageSize' value="15" />
-                        <span id="page-link">
-                            <a href="#">第一页</a>
-                            <a href="#">上一页</a>
-                            <a href="#">下一页</a>
-                            <a href="#">最末页</a>
-                            <select id="gotoPage">
-                                <option value='1'>1</option>
-                            </select>
-                        </span>
-                    </div>
-                </td>
-            </tr>
         </table>
+        <div id="turn-page" class="page">{$pageHtml}</div>
     </div>
 </form>
 
