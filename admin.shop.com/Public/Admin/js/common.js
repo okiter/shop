@@ -49,7 +49,7 @@ $(function(){
       if(data.url){
         //如果有url地址,跳转到指定的url地址
         location.href = data.url;
-      }else{
+      }else if(data.status){   //data.status = 0,下面代码不执行,从而不会刷新页面
         //如果没有url地址,自身刷新
         location.reload();
       }

@@ -17,3 +17,12 @@
 
 
 3. js都写在页面最后...
+
+
+4. 为了配置代码生成器. 在创建表时的规范:
+    a. 表名和控制器的名字必须一致
+      例如:
+      表        控制器
+      brand====>BrandController
+      goods_type====>GoodsTypeController
+    b.表必须有注释,该注释来说当前表是什么

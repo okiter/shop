@@ -1,4 +1,3 @@
-<?php
 /**
  * Created by PhpStorm.
  * User: Administrator
@@ -11,7 +10,7 @@ namespace Admin\Controller;
 
 use Think\Controller;
 
-class BrandController extends BaseController
+class <?php echo $name ?>Controller extends BaseController
 {
-    protected $meta_title = '品牌';
+    protected $meta_title = '<?php echo $meta_title ?>';
 }

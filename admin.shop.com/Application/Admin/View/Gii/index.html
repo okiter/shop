@@ -1,0 +1,22 @@
+<extend name="Common:edit"/>
+<block name="form">
+    <form method="post" action="{:U()}">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">表名</td>
+                <td>
+                    <input type="text" name="table_name" maxlength="60"/>
+                    <span class="require-field">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td  align="left"><br />
+                </td>
+                <td  align="left"><br />
+                    <input type="submit" class="button" value=" 生成 " />
+                    <input type="reset" class="button" value=" 重置 " />
+                </td>
+            </tr>
+        </table>
+    </form>
+</block>
