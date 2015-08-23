@@ -1,54 +1,87 @@
+<?php
 <extend name="Common:edit"/>
+<block name='css'>
+    <link href="__CSS__/common.css" rel="stylesheet" type="text/css" />
+</block>
 <block name="form">
-    <form method="post" action="{:U()}" enctype="multipart/form-data">
+    <form method="post" action="{:U()}">
         <table cellspacing="1" cellpadding="3" width="100%">
             <tr>
-                <td class="label">品牌名称</td>
+                <td class="label">名称</td>
                 <td>
-                    <input type="text" name="name" maxlength="60" value="{$name}" />
-                    <span class="require-field">*</span>
+                    <input type="text" name="name" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
-                <td class="label">品牌网址</td>
+                <td class="label">网址</td>
                 <td>
-                    <input type="text" name="site_url" maxlength="60" value="{$site_url}" />
-                    <span class="require-field">*</span>
+                    <input type="text" name="site_url" maxlength="60" value="{$site_url}"/> <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
-                <td class="label">品牌LOGO</td>
+                <td class="label">LOGO</td>
                 <td>
-                    <input type="file" name="logo" maxlength="60"/>
-                    <span class="require-field">*</span>
+                    <input id="logo-upload" type="file" name="logo" maxlength="60"/>
                 </td>
             </tr>
             <tr>
-                <td class="label">品牌描述</td>
+                <td class="label">简介</td>
                 <td>
-                    <textarea  name="intro" cols="60" rows="4">{$intro}</textarea>
+                    <textarea name="intro" cols="60" rows="4">{$intro}</textarea> <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="label">排序</td>
                 <td>
-                    <input type="text" name="sort" maxlength="40" size="15" value="{$sort|default=20}" />
+                    <input type="text" name="sort" maxlength="60" value="{$sort|default=20}"/> <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
-                <td class="label">是否显示</td>
+                <td class="label">状态</td>
                 <td>
-                    <input type="radio" class="status" name="status" value="1"/> 是
-                    <input type="radio" class="status"  name="status" value="0"/> 否
+                    <input type="radio" name="status" class="status" maxlength="60" value="1"/>是
+                    <input type="radio" name="status" class="status"  maxlength="60" value="0"/>否
+                    <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
-                <td colspan="2" align="center"><br />
-                    <input type="hidden" name="id" value="{$id}" />
-                    <input type="submit" class="button" value=" 确定 " />
-                    <input type="reset" class="button" value=" 重置 " />
+                <td colspan="2" align="center"><br/>
+                    <input type="hidden" name="id" value="{$id}"/>
+                    <input type="submit" class="button ajax-post" value=" 确定 "/>
+                    <input type="reset" class="button" value=" 重置 "/>
                 </td>
             </tr>
         </table>
     </form>
+</block>
+<block name="js">
+   <script type="text/javascript" src="__UPLOADIFY__/jquery.uploadify.min.js"></script>
+   <script type="text/javascript">
+       $(function(){
+
+           //>>1.将上传表单元素替换为上传插件
+           window.setTimeout(function(){
+
+               $('#logo-upload').uploadify({
+                   'swf'      : '__UPLOADIFY__/uploadify.swf',   //swf的地址
+                   'uploader' : 'uploadify.php',      //处理上传的地址地址
+                   'buttonText' : '选择图片',
+                   'width'    : 146, //设置插件的宽
+                   'fileObjName' : 'the_files',  //默认为Filedata,  $_FIELS['the_files']
+                   'fileSizeLimit' : '200KB',  //限制文件上传的大小
+                   'fileTypeExts' : '*.gif; *.jpg; *.png',  //限制上传的文件格式
+                   'formData'      : {'dir' : 'brand'},  //I('post.dir')   //上传时传入的额外参数
+                   'multi'    : true,   //是否支持批量上传
+                   'onUploadError' : function(file, errorCode, errorMsg, errorString) {    //上传失败时要执行的方法
+                       alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+                   },
+                   'onUploadSuccess' : function(file, data, response) {           //上传成功时要执行的方法
+                       alert('The file ' + file.name + ' was successfully uploaded with a response of ' + response + ':' + data);
+                   }
+               });
+           },50);
+
+
+       });
+   </script>
 </block>

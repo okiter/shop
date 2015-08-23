@@ -26,3 +26,15 @@
       brand====>BrandController
       goods_type====>GoodsTypeController
     b.表必须有注释,该注释来说当前表是什么
+
+    c.通过字段的注释,说明当前字段对应的表单元素类型
+      例如:
+        create table brand(
+        id smallint unsigned  primary key auto_increment,
+        name varchar(50) not null default '' comment '名称',
+        site_url varchar(50) not null default '' comment '网址',
+        logo varchar(50) not null default '' comment 'LOGO@file',
+        intro text comment '简介@textarea',
+        sort tinyint  not null default 20 comment '排序',
+        status tinyint not null default 1 comment '状态@radio|1=是&0=否'
+        )engine=MyISAM comment '品牌'

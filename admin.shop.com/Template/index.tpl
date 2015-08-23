@@ -1,4 +1,3 @@
-<?php
 <extend name="Common:index"/>
 <block name="list">
     <div class="list-div" id="listDiv">
@@ -6,13 +5,14 @@
         <table cellpadding="3" cellspacing="1">
             <tr>
                 <th width="10px">全选<input type="checkbox" class="check_all"></th>
-                                <th>名称 </th>
-                                <th>网址 </th>
-                                <th>LOGO </th>
-                                <th>简介 </th>
-                                <th>排序 </th>
-                                <th>排序 </th>
-                                <th>操作</th>
+                <?php foreach($fields as $field):
+                     if($field['Key']=='PRI'){
+                        continue;
+                     }
+                ?>
+                <th><?php echo $field['Comment'] ?> </th>
+                <?php endForeach;?>
+                <th>操作</th>
             </tr>
             <volist name="rows" id="row">
                 <tr>
@@ -20,7 +20,19 @@
                     <td class="first-cell">
                         <span style="float:right">{$row.name}</span>
                     </td>
-                    <td align="center">{$row.site_url}</td><td align="center">{$row.logo}</td><td align="center">{$row.intro}</td><td align="center">{$row.sort}</td><td align="center">{$row.sort}</td>                    <td align="center">
+                    <?php foreach($fields as $field){
+                        //过滤掉主键和名字
+                         if($field['Key']=='PRI' || $field['Field']=='name'){
+                             continue;
+                         }
+                         if($field['Field']=='status'){
+                            echo "<td align=\"center\"><a class=\"ajax-get\" href=\"{:U('changeStatus',array('id'=>\$row['id'],'status'=>1-\$row['status']))}\"><img src=\"__IMG__/{\$row.status}.gif\"/></a></td>";
+                         }else{
+                             echo "<td align=\"center\">{\$row.{$field['Field']}}</td>";
+                         }
+                        }
+                    ?>
+                    <td align="center">
                         <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
                         <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a>
                     </td>
