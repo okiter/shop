@@ -26,9 +26,9 @@
                              continue;
                          }
                          if($field['Field']=='status'){
-                            echo "<td align=\"center\"><a class=\"ajax-get\" href=\"{:U('changeStatus',array('id'=>\$row['id'],'status'=>1-\$row['status']))}\"><img src=\"__IMG__/{\$row.status}.gif\"/></a></td>";
+                            echo "<td align=\"center\"><a class=\"ajax-get\" href=\"{:U('changeStatus',array('id'=>\$row['id'],'status'=>1-\$row['status']))}\"><img src=\"__IMG__/{\$row.status}.gif\"/></a></td>\r\n";
                          }else{
-                             echo "<td align=\"center\">{\$row.{$field['Field']}}</td>";
+                             echo "<td align=\"center\">{\$row.{$field['Field']}}</td>\r\n";
                          }
                         }
                     ?>

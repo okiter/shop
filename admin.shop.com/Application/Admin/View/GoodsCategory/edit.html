@@ -1,0 +1,63 @@
+<?php
+<extend name="Common:edit"/>
+<block name="form">
+    <form method="post" action="{:U()}">
+        <table cellspacing="1" cellpadding="3" width="100%">
+                        <tr>
+                <td class="label">名称</td>
+                <td>
+                   <input type="text" name="name" maxlength="60" value="{$name}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">父分类</td>
+                <td>
+                   <input type="text" name="parent_id" maxlength="60" value="{$parent_id}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">左边界</td>
+                <td>
+                   <input type="text" name="lft" maxlength="60" value="{$lft}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">右边界</td>
+                <td>
+                   <input type="text" name="rght" maxlength="60" value="{$rght}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">级别</td>
+                <td>
+                   <input type="text" name="level" maxlength="60" value="{$level}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">简介</td>
+                <td>
+                   <textarea  name="intro" cols="60" rows="4">{$intro}</textarea>                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">排序</td>
+                <td>
+                   <input type="text" name="sort" maxlength="60" value="{$sort|default=20}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">状态</td>
+                <td>
+                   <input type="radio"  class='status'   name="status" maxlength="60" value="1"/>是<input type="radio"  class='status'   name="status" maxlength="60" value="0"/>否                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td colspan="2" align="center"><br />
+                    <input type="hidden" name="id" value="{$id}" />
+                    <input type="submit" class="button ajax-post" value=" 确定 " />
+                    <input type="reset" class="button" value=" 重置 " />
+                </td>
+            </tr>
+        </table>
+    </form>
+</block>
