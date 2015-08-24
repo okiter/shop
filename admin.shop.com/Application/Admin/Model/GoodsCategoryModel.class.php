@@ -9,6 +9,7 @@
 namespace Admin\Model;
 
 
+use Admin\Service\NestedSetsService;
 use Think\Model;
 use Think\Page;
 
@@ -29,4 +30,20 @@ class GoodsCategoryModel extends BaseModel
     public function getList(){
         return $this->where("status>-1")->order('lft')->select();
     }
+
+    /**
+     * 重写基础模型中的add方法
+     */
+    public function add(){
+        //是create收集到的数据
+        //>>将该数据进行计算, 计算后生成lft,rght,level, 然后再添加到数据库中..
+        //>>1.执行sql的对象
+        $dbMysqlImpModel  = new DbMysqlImpModel();
+        //>>2.完成业务运算的对象
+        $nestedSetsService = new NestedSetsService($dbMysqlImpModel,'goods_category','lft','rght','parent_id','id','level');
+        //>>3.生成sql,并且让执行sql的对象执行sql语句
+        return $nestedSetsService->insert($this->data['parent_id'],$this->data,'bottom');
+    }
+
+
 }
