@@ -8,7 +8,8 @@ return array(
         '__IMG__' => SRC_URL.'/Public/Admin/images', // 更改默认的/Public 替换规则
         '__LAYER__' => SRC_URL.'/Public/Admin/layer/layer.js', // 更改默认的/Public 替换规则
         '__UPLOADIFY__' => SRC_URL.'/Public/Admin/uploadify', // 更改默认的/Public 替换规则
-        '__TREEGRID__' => SRC_URL.'/Public/Admin/treegrid', // 更改默认的/Public 替换规则
+        '__TREEGRID__' => SRC_URL.'/Public/Admin/treegrid', // treegrid的路径
+        '__ZTREE__' => SRC_URL.'/Public/Admin/ztree', // ztree的路径
         '__BRAND__' => "http://itsource-brand.b0.upaiyun.com", //访问itsource_brand空间的url
     ),
     'UPLOAD'=>array(

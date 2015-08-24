@@ -78,8 +78,17 @@ abstract class BaseController extends Controller
             $this->error('保存失败!' . showModelError($this->model));
         } else {
             $this->assign('meta_title','添加'.$this->meta_title);
+
+            $this->_before_edit_view();
             $this->display('edit');
         }
+    }
+
+    /**
+     * 钩子方法:
+     * 主要被子类覆盖.. 在编辑页面展示之前执行该方法..
+     */
+    protected function _before_edit_view(){
     }
 
     public function edit($id)
@@ -96,6 +105,7 @@ abstract class BaseController extends Controller
             $row = $this->model->find($id);
             $this->assign($row);
             $this->assign('meta_title','编辑'.$this->meta_title);
+            $this->_before_edit_view();
             $this->display('edit');
         }
     }/**

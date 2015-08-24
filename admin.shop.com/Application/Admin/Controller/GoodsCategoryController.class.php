@@ -15,8 +15,6 @@ class GoodsCategoryController extends BaseController
 {
     protected $meta_title = '商品分类';
 
-
-
     public function index()
     {
         //查询出没有被删除的分类数据
@@ -27,4 +25,10 @@ class GoodsCategoryController extends BaseController
         $this->assign('meta_title',$this->meta_title);
         $this->display('index');
     }
+
+    protected function _before_edit_view(){
+        $rows = $this->model->getList();
+        $this->assign('rows',json_encode($rows));
+    }
+
 }
