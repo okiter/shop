@@ -1,26 +1,36 @@
 下载:
 wget http://curl.haxx.se/download/curl-7.43.0.tar.gz
-
+安装curl
 tar zxf curl-7.43.0.tar.gz
 ./configure --prefix=/usr/local/curl
 make
 make install
 
-进入PHP的源码包
-cd ext/curl
 
-运行一下phpize
-/usr/local/php/bin/phpize
+安装curl的php扩展:
 
-配置curl
-./configure --with-php-config=/usr/local/php/bin/php-config  --with-curl=/usr/local/curl
-make
-make install
+    进入PHP的源码包
+    cd ext/curl
 
-生成了一个扩展文件/usr/local/php/lib/php/extensions/no-debug-zts-20100525/下的curl.so
+    运行一下phpize
+    /usr/local/php/bin/phpize
+
+    配置curl
+    ./configure --with-php-config=/usr/local/php/bin/php-config  --with-curl=/usr/local/curl
+    make
+    make install
+
+    生成了一个扩展文件/usr/local/php/lib/php/extensions/no-debug-zts-20100525/下的curl.so
 
 
-打开php.ini
+
+
+
+
+配置php.ini
+
+cp /usr/local/src/php-5.4.42/php.ini-development  /usr/local/php/etc/php.ini
+
 vi /usr/local/php5/etc/php.ini
 
 
@@ -30,7 +40,6 @@ extension_dir= /usr/local/php/lib/php/extensions/no-debug-zts-20100525/
 
 在扩展的地方添加:
 extension=curl.so
-
 
 :wq 保存
 重启php-fpm服务即可。

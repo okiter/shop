@@ -8,5 +8,18 @@ return array(
         '__IMG__' => SRC_URL.'/Public/Admin/images', // 更改默认的/Public 替换规则
         '__LAYER__' => SRC_URL.'/Public/Admin/layer/layer.js', // 更改默认的/Public 替换规则
         '__UPLOADIFY__' => SRC_URL.'/Public/Admin/uploadify', // 更改默认的/Public 替换规则
+        '__BRAND__' => "http://itsource-brand.b0.upaiyun.com", //访问itsource_brand空间的url
+    ),
+    'UPLOAD'=>array(
+        'mimes'         =>  array(), //允许上传的文件MiMe类型
+        'maxSize'       =>  0, //上传的文件大小限制 (0-不做限制)
+        'exts'          =>  array(), //允许上传的文件后缀
+        'rootPath'      =>  './', // 必须写为./ 保存根路径
+    ),
+    'DRIVERCONFIG'=>array(
+        'host'     => 'v0.api.upyun.com', //又拍云服务器
+        'username' => 'itsource', //又拍云操作员的账号
+        'password' => 'itsource', //又拍云操作员的密码
+        'timeout'  => 90, //超时时间
     )
 );

@@ -21,7 +21,13 @@
             <tr>
                 <td class="label">LOGO</td>
                 <td>
-                    <input id="logo-upload" type="file" name="logo" maxlength="60"/>
+                    <input id="logo-upload" type="file"  maxlength="60"/>
+                    <input  id="logo" type="hidden" name="logo" maxlength="60" value="{$logo}"/>
+                    <div class="upload-img-box" style="display: {$logo?'block':'none'}">
+                        <div class="upload-pre-item">
+                        <img src="__BRAND__/{$logo}!min">
+                    </div>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -56,27 +62,34 @@
 </block>
 <block name="js">
    <script type="text/javascript" src="__UPLOADIFY__/jquery.uploadify.min.js"></script>
+   <script type="text/javascript" src="__LAYER__"></script>
    <script type="text/javascript">
        $(function(){
 
            //>>1.将上传表单元素替换为上传插件
            window.setTimeout(function(){
-
+               //为了防止浏览器崩溃,所以说放到setTimeout中..
                $('#logo-upload').uploadify({
                    'swf'      : '__UPLOADIFY__/uploadify.swf',   //swf的地址
-                   'uploader' : 'uploadify.php',      //处理上传的地址地址
+                   'uploader' : "{:U('Upload/index')}",      //处理上传的地址地址
                    'buttonText' : '选择图片',
                    'width'    : 146, //设置插件的宽
-                   'fileObjName' : 'the_files',  //默认为Filedata,  $_FIELS['the_files']
-                   'fileSizeLimit' : '200KB',  //限制文件上传的大小
+//                   'fileObjName' : 'the_files',  //默认为Filedata,  $_FIELS['the_files']
+//                   'fileSizeLimit' : '200KB',  //限制文件上传的大小
                    'fileTypeExts' : '*.gif; *.jpg; *.png',  //限制上传的文件格式
                    'formData'      : {'dir' : 'brand'},  //I('post.dir')   //上传时传入的额外参数
                    'multi'    : true,   //是否支持批量上传
                    'onUploadError' : function(file, errorCode, errorMsg, errorString) {    //上传失败时要执行的方法
-                       alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
+                        layer.msg('上传失败!',{
+                            offset:0
+                        });
                    },
                    'onUploadSuccess' : function(file, data, response) {           //上传成功时要执行的方法
-                       alert('The file ' + file.name + ' was successfully uploaded with a response of ' + response + ':' + data);
+                       //>>1.将路径放到隐藏中,再通过表单提交给服务器
+                       $('#logo').val(data);
+                       //>>2.将给地址放到img的src中,然后显示图片
+                       $('.upload-img-box img').attr('src','__BRAND__/'+data+'!min');
+                       $('.upload-img-box').show();
                    }
                });
            },50);

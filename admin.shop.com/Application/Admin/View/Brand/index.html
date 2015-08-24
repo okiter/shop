@@ -11,7 +11,6 @@
                                 <th>LOGO </th>
                                 <th>简介 </th>
                                 <th>排序 </th>
-                                <th>排序 </th>
                                 <th>操作</th>
             </tr>
             <volist name="rows" id="row">
@@ -20,8 +19,12 @@
                     <td class="first-cell">
                         <span style="float:right">{$row.name}</span>
                     </td>
-                    <td align="center">{$row.site_url}</td><td align="center">{$row.logo}</td><td align="center">{$row.intro}</td><td align="center">{$row.sort}</td><td align="center">{$row.sort}</td>                    <td align="center">
-                        <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
+                    <td align="center">{$row.site_url}</td>
+                    <td align="center"><img src="__BRAND__/{$row.logo}!m"/></td>
+                    <td align="center">{$row.intro}</td>
+                    <td align="center">{$row.sort}</td>
+                    <td align="center">
+                    <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
                         <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a>
                     </td>
                 </tr>
