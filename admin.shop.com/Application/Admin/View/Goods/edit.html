@@ -57,14 +57,14 @@
                 <td class="label">品牌</td>
                 <td>
 
-                    {:arr2select('brand_id',$brands)}
+                    {:arr2select('brand_id',$brands,$brand_id)}
                     <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="label">供货商</td>
                 <td>
-                    {:arr2select('supplier_id',$suppliers)}
+                    {:arr2select('supplier_id',$suppliers,$supplier_id)}
                     <span class="require-field">*</span>
                 </td>
             </tr>
@@ -85,9 +85,9 @@
             <tr>
                 <td class="label">商品状态</td>
                 <td>
-                    <input type="checkbox" name="goods_status" value="1">精品
-                    <input type="checkbox" name="goods_status" value="1">新品
-                    <input type="checkbox" name="goods_status" value="1">热销</td>
+                    <input type="checkbox" class="goods_status"  name="goods_status[]" value="1">精品
+                    <input type="checkbox" class="goods_status" name="goods_status[]" value="2">新品
+                    <input type="checkbox" class="goods_status" name="goods_status[]" value="4">热销</td>
                     <span class="require-field">*</span>
                 </td>
             </tr>
@@ -121,7 +121,7 @@
         <table cellspacing="1" cellpadding="3" width="100%" style="display: none;">
             <tr>
                 <td colspan="2">
-                    <textarea id="intro">{$intro}</textarea>
+                    <textarea id="intro" name="intro">{$intro}</textarea>
                 </td>
             </tr>
         </table>
@@ -129,7 +129,7 @@
             <tr>
                 <td class="label">商品属性</td>
                 <td>
-                    <input type="text" name="name" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
+                    <input type="text" name="" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
                 </td>
             </tr>
         </table>
@@ -137,7 +137,7 @@
             <tr>
                 <td class="label">商品相册</td>
                 <td>
-                    <input type="text" name="name" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
+                    <input type="text" name="" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
                 </td>
             </tr>
         </table>
@@ -145,11 +145,12 @@
             <tr>
                 <td class="label">关联文章</td>
                 <td>
-                    <input type="text" name="name" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
+                    <input type="text" name="" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
                 </td>
             </tr>
         </table>
         <div class="button-div">
+            <input type="hidden" name="id" value="{$id}">
             <input type="submit" value=" 确定 " class="button">
             <input type="reset" value=" 重置 " class="button">
         </div>
@@ -258,11 +259,33 @@
             //将id=treeDemo的节点变成一个树
             var ztree = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             <empty name='id'>
-                        //添加时张开所有的节点
+                  //添加时张开所有的节点
                     ztree.expandAll(true);
+            <else/>
+                var goods_category_id = {$goods_category_id};
+                var node = ztree.getNodeByParam('id',goods_category_id)
+                $('.goods_category_text').val(node.name);
+                ztree.selectNode(node);
             </empty>
             //////////////////////////商品分类--ztree---结束//////////////////////////////////////////
+            //////////////////////////商品的状态-----开始//////////////////////////////////////////
+            <notempty name='id'>
+                //保存在数据库中的商品状态
+                var goods_status = {$goods_status};
 
+                var goods_status_temp = [];
+                if((goods_status & 1)>0){
+                    goods_status_temp.push(1);
+                }
+                if((goods_status & 2)>0){
+                    goods_status_temp.push(2);
+                }
+                if((goods_status & 4)>0){
+                    goods_status_temp.push(4);
+                }
+                $('.goods_status').val(goods_status_temp);
+            </notempty>
+        //////////////////////////商品的状态-----结束//////////////////////////////////////////
 
         });
     </script>

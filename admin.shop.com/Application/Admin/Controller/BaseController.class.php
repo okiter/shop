@@ -102,13 +102,15 @@ abstract class BaseController extends Controller
             }
             $this->error('更新失败!' . showModelError($this->model));
         } else {
+            //根据id只找到当前表中id对应的记录
             $row = $this->model->find($id);
             $this->assign($row);
             $this->assign('meta_title','编辑'.$this->meta_title);
             $this->_before_edit_view();
             $this->display('edit');
         }
-    }/**
+    }
+    /**
      * 改变一行数据的状态
      * @param $id
      * @param $status  -1 表示删除
