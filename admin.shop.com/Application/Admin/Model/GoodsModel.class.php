@@ -80,12 +80,36 @@ class GoodsModel extends BaseModel
         //>>3.处理商品描述
         $result  = $this->handleGoodsIntro($id,$requestData['intro']);
         if($result===false){
-            $this->error = '更新简介信息失败!';
+            $this->error = '添加简介信息失败!';
+            $this->rollback();
+            return false;
+        }
+        //>>4.处理商品相册中的图片
+        $result = $this->handlerGallery($id,$requestData['gallery_path']);
+        if($result===false){
+            $this->error = '添加商品图片失败!';
             $this->rollback();
             return false;
         }
 
         return $this->commit();//提交事务
+    }
+
+    /**
+     * 单独来处理商品相册数据
+     * @param $goods_id
+     * @param $gallery_paths
+     * @return bool|string
+     */
+    private function handlerGallery($goods_id,$gallery_paths){
+         if(!empty($gallery_paths)){
+             $rows = array();
+             foreach($gallery_paths as $gallery_path){
+                 $rows[] =  array('path'=>$gallery_path,'goods_id'=>$goods_id);
+             }
+
+            return M('GoodsGallery')->addAll($rows);
+         }
     }
 
     /**
@@ -103,7 +127,6 @@ class GoodsModel extends BaseModel
     }
 
 
-
     public function find($id){
         $goods = parent::find($id);
         if(!empty($goods)){
@@ -112,6 +135,12 @@ class GoodsModel extends BaseModel
             //>>1.从goods_intro表中找到简介
             $intro  = M('GoodsIntro')->getFieldByGoods_id($id,'content');
             $goods['intro'] = $intro;
+
+
+            //>>2.goods_gallery表中获取当前商品的图片路径
+            $galleryPaths  = M('GoodsGallery')->field('path')->where(array('goods_id'=>$id))->select();
+            $galleryPaths = array_column($galleryPaths,'path');
+            $goods['galleryPaths'] =  $galleryPaths;
 
         }
 

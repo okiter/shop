@@ -135,9 +135,19 @@
         </table>
         <table cellspacing="1" cellpadding="3" width="100%" style="display: none;">
             <tr>
-                <td class="label">商品相册</td>
                 <td>
-                    <input type="text" name="" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
+                    <div class="upload-img-box" id="upload-img-box">
+                        <volist name="galleryPaths" id="galleryPath">
+                            <div class="upload-pre-item" style="display: inline-block">
+                                <img src="__GOODS__/{$galleryPath}!m">
+                            </div>
+                        </volist>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="file" id="gallery_upload_button">
                 </td>
             </tr>
         </table>
@@ -286,6 +296,38 @@
                 $('.goods_status').val(goods_status_temp);
             </notempty>
         //////////////////////////商品的状态-----结束//////////////////////////////////////////
+
+        //////////////////////////商品的上传-----开始//////////////////////////////////////////
+        window.setTimeout(function(){
+            //为了防止浏览器崩溃,所以说放到setTimeout中..
+            $('#gallery_upload_button').uploadify({
+                'swf'      : '__UPLOADIFY__/uploadify.swf',   //swf的地址
+                'uploader' : "{:U('Upload/index')}",      //处理上传的地址地址
+                'buttonText' : '选择图片',
+                'width'    : 146, //设置插件的宽
+//                   'fileObjName' : 'the_files',  //默认为Filedata,  $_FIELS['the_files']
+//                   'fileSizeLimit' : '200KB',  //限制文件上传的大小
+                'fileTypeExts' : '*.gif; *.jpg; *.png',  //限制上传的文件格式
+                'formData'      : {'dir' : 'goods'},  //I('post.dir')   //上传时传入的额外参数
+                'multi'    : true,   //是否支持批量上传
+                'onUploadError' : function(file, errorCode, errorMsg, errorString) {    //上传失败时要执行的方法
+                    layer.msg('上传失败!',{
+                        offset:0
+                    });
+                },
+                'onUploadSuccess' : function(file, data, response) {           //上传成功时要执行的方法
+                    //>>1.将路径放到隐藏中,再通过表单提交给服务器
+                    var upload_item = '<div class="upload-pre-item" style="display: inline-block">\
+                            <img src="__GOODS__/'+data+'!m">\
+                            <input type="hidden" name="gallery_path[]" value="'+data+'" >\
+                     </div>'
+                    $('#upload-img-box').append(upload_item);
+                }
+            });
+        },50);
+        //////////////////////////商品的上传-----结束//////////////////////////////////////////
+
+
 
         });
     </script>
