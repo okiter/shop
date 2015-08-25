@@ -10,7 +10,9 @@ return array(
         '__UPLOADIFY__' => SRC_URL.'/Public/Admin/uploadify', // 更改默认的/Public 替换规则
         '__TREEGRID__' => SRC_URL.'/Public/Admin/treegrid', // treegrid的路径
         '__ZTREE__' => SRC_URL.'/Public/Admin/ztree', // ztree的路径
+        '__UEDITOR__' => SRC_URL.'/Public/Admin/ueditor', // ztree的路径
         '__BRAND__' => "http://itsource-brand.b0.upaiyun.com", //访问itsource_brand空间的url
+        '__GOODS__' => "http://itsource-goods.b0.upaiyun.com", //访问itsource_goods空间的url
     ),
     'UPLOAD'=>array(
         'mimes'         =>  array(), //允许上传的文件MiMe类型

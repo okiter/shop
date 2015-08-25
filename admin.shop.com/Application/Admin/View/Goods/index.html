@@ -1,0 +1,47 @@
+<?php
+<extend name="Common:index"/>
+<block name="list">
+    <div class="list-div" id="listDiv">
+        <input  type="button" value=" 删除 " url="{:U('changeStatus')}"   class="button ajax-post">
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th width="10px">全选<input type="checkbox" class="check_all"></th>
+                                <th>名称 </th>
+                                <th>货号 </th>
+                                <th>商品LOGO </th>
+                                <th>商品分类 </th>
+                                <th>品牌 </th>
+                                <th>供货商 </th>
+                                <th>市场价格 </th>
+                                <th>本店价格 </th>
+                                <th>本店价格 </th>
+                                <th>商品状态 </th>
+                                <th>是否上架 </th>
+                                <th>操作</th>
+            </tr>
+            <volist name="rows" id="row">
+                <tr>
+                    <td align="center"><input type="checkbox" name="id[]" class="id" value="{$row.id}"></td>
+                    <td class="first-cell">
+                        <span style="float:right">{$row.name}</span>
+                    </td>
+                    <td align="center">{$row.sn}</td>
+                    <td align="center">{$row.logo}</td>
+                    <td align="center">{$row.goods_category_id}</td>
+                    <td align="center">{$row.brand_id}</td>
+                    <td align="center">{$row.supplier_id}</td>
+                    <td align="center">{$row.market_price}</td>
+                    <td align="center">{$row.shop_price}</td>
+                    <td align="center">{$row.stock}</td>
+                    <td align="center">{$row.goods_status}</td>
+                    <td align="center">{$row.is_on_sale}</td>
+                    <td align="center">
+                        <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
+                        <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a>
+                    </td>
+                </tr>
+            </volist>
+        </table>
+        <div id="turn-page" class="page">{$pageHtml}</div>
+    </div>
+</block>
