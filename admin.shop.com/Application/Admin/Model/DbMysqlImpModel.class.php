@@ -222,8 +222,10 @@ class DbMysqlImpModel implements  DbMysqlModel
      */
     public function getOne($sql, array $args = array())
     {
-        // TODO: Implement getOne() method.
-        echo 'getOne....<br/>';
+        $sql = $this->buildSQL(func_get_args());
+        $rows = M()->query($sql);
+        //得到第一行第一列中的值
+        return array_shift(array_values($rows[0]));
     }
 
 }

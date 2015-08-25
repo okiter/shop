@@ -27,8 +27,8 @@ class GoodsCategoryModel extends BaseModel
     );
 
 
-    public function getList(){
-        return $this->where("status>-1")->order('lft')->select();
+    public function getList($field="*"){
+        return $this->field($field)->where("status>-1")->order('lft')->select();
     }
 
     /**
@@ -43,6 +43,47 @@ class GoodsCategoryModel extends BaseModel
         $nestedSetsService = new NestedSetsService($dbMysqlImpModel,'goods_category','lft','rght','parent_id','id','level');
         //>>3.生成sql,并且让执行sql的对象执行sql语句
         return $nestedSetsService->insert($this->data['parent_id'],$this->data,'bottom');
+    }
+
+    public function save()
+    {
+
+        //>>1.执行sql的对象
+        $dbMysqlImpModel  = new DbMysqlImpModel();
+        //>>2.完成业务运算的对象
+        $nestedSetsService = new NestedSetsService($dbMysqlImpModel,'goods_category','lft','rght','parent_id','id','level');
+        //>>3.进行移动
+          // 第一参数: 移动谁     第二个参数为: 移动到谁下面
+        $result = $nestedSetsService->moveUnder($this->data['id'], $this->data['parent_id'],'bottom');
+        if($result===false){
+            $this->error = '移动失败!不能够移动到自己的子节点下!';
+            return false;
+        }
+        //>>4.更新其他表单字段中的数据
+        return parent::save();
+    }
+
+
+    /**
+     * 根据id改变一行数据为status的状态值
+     * @param $id
+     * @param $status
+     * @return bool
+     */
+    public function changeStatus($id, $status)
+    {
+        //>>1. id找到 自己以及子分类的id
+        $sql = "SELECT node.id FROM `goods_category` as node,`goods_category` as parent
+where node.lft>=parent.lft and node.rght <= parent.rght and parent.id = $id";
+        $rows = $this->query($sql);
+        //从二维数组中取出id的值
+        $id = array_column($rows,'id');
+        //>>2.再作为id参数传入
+        $data = array('id' => array('in',$id), 'status' => $status);
+        if ($status == -1) {
+            $data['name'] = array('exp', 'concat(name,"_del")');
+        }
+        return parent::save($data);
     }
 
 

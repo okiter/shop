@@ -77,7 +77,6 @@
    <script type="text/javascript">
        $(function(){
 
-
            var setting = {
                data: {
                    simpleData: {
@@ -100,8 +99,27 @@
 
            //将id=treeDemo的节点变成一个树
            var ztree = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-           //张开所有的节点
-           ztree.expandAll(true);
+
+
+           <empty name='id'>
+              //添加时张开所有的节点
+               ztree.expandAll(true);
+           <else/>
+              //编辑时
+              //>>1.从树的中找到id为  $parent_id的节点
+                var parent_id = {$parent_id};
+                var node = ztree.getNodeByParam('id',parent_id);
+              //>>2.选中找到的节点,并且将选中的节点的id,name放到父分类的表单元素中
+                ztree.selectNode(node);
+
+               var id = node.id;  //节点在数据库中对应的id
+               var name = node.name;//节点对应的名称
+               $('.parent_text').val(name);
+               $('.parent_id').val(id);
+           </empty>
+
+
+
 
 
        });

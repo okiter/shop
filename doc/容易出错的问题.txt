@@ -10,3 +10,7 @@
 
 4. mysql的安全性导致一下问题:
 1366:Incorrect integer value: '' for column 'id' at row 1
+   修改my.cnf中的配置:
+   sql-model=
+   删除严格性
+

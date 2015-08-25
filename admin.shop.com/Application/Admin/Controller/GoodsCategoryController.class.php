@@ -27,7 +27,7 @@ class GoodsCategoryController extends BaseController
     }
 
     protected function _before_edit_view(){
-        $rows = $this->model->getList();
+        $rows = $this->model->getList('id,name,parent_id');
         $this->assign('rows',json_encode($rows));
     }
 

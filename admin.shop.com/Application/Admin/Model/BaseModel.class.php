@@ -26,7 +26,7 @@ abstract class BaseModel extends Model
      * 查询出需要在列表中显示的数据
      * @return mixed
      */
-    public function getList()
+    public function getList($field='*')
     {
 
         //准备排序
@@ -40,8 +40,7 @@ abstract class BaseModel extends Model
         if(in_array('status',$this->getDbFields())){  //如果当前表中有status字段时
             $wheres['status'] = array('gt', -1);
         }
-
-        return $this->order($orders)->where($wheres)->select();
+        return $this->field($field)->order($orders)->where($wheres)->select();
     }
 
     /**

@@ -23,3 +23,19 @@ function showModelError($model)
     $errorInfo .= '</ul>';
     return $errorInfo;
 }
+
+if(!function_exists('array_column')){
+    /**
+     * 取出二维数组中一列的值
+     * @param $rows   二维数组
+     * @param $column_name   一列的名字
+     * @return array
+     */
+   function array_column($rows,$column_name){
+       $temp = array();
+        foreach($rows as $row){
+            $temp[] =  $row[$column_name];
+        }
+       return $temp;
+   }
+}
