@@ -72,11 +72,11 @@ abstract class BaseModel extends Model
     {
         //过滤没有被删除的数据
         if(in_array('status',$this->getDbFields())){  //如果当前表中有status字段时
-            $wheres['status'] = array('gt', -1);
+            $wheres['obj.status'] = array('gt', -1);
         }
 
         //>>1.提供$pageHtml的值
-        $count = $this->where($wheres)->count();
+        $count = $this->alias('obj')->where($wheres)->count();
         $pageSize = C('PAGE_SIZE')==null? 10 : C('PAGE_SIZE');
         $page = new Page($count, $pageSize);
         //当总条数大于每页多少条时再显示总条数
@@ -87,8 +87,32 @@ abstract class BaseModel extends Model
         //>>2.提供$rows的值,当前页的数据
         $orders = array();
         if(in_array('sort',$this->getDbFields())){
-            $orders['sort'] = 'asc';
+            $orders['obj.sort'] = 'asc';
         }
-        $rows = $this->order($orders)->limit($page->firstRow, $page->listRows)->where($wheres)->select();
+
+        $this->_setModel();
+
+        $rows = $this->alias('obj')->order($orders)->limit($page->firstRow, $page->listRows)->where($wheres)->select();
+        //对rows进一步处理
+        $this->_handleRows($rows);
         return array('rows' => $rows, 'pageHtml' => $pageHtml);
-    }}
+    }
+
+    /**
+     * 该方法主要是被子类覆盖.
+     */
+    protected function _setModel(){
+
+    }
+
+
+    /**该方法主要是被子类覆盖,修改rows中的数据
+     * @param &$rows , 必须使用引用
+     */
+    protected function _handleRows(&$rows){
+
+    }
+
+
+
+}

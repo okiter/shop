@@ -44,7 +44,7 @@ abstract class BaseController extends Controller
         //>>2.接收查询参数
         $keyword = I('get.keyword', '');
         if (!empty($keyword)) {
-            $wheres['name'] = array('like', "%{$keyword}%");
+            $wheres['obj.name'] = array('like', "%{$keyword}%");
         }
 
         //>>1.需要$model提供分页中需要使用的数据

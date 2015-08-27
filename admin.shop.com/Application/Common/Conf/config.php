@@ -10,6 +10,7 @@ return array(
 //    'DB_PARAMS'          	=>  array(), // 数据库连接参数
     'DB_PARAMS'    =>    array(\PDO::ATTR_CASE => \PDO::CASE_NATURAL),
 
-    'PAGE_SIZE'             =>  2, //分页中每页显示的条数
+    'PAGE_SIZE'             =>  10, //分页中每页显示的条数
+    'SHOW_PAGE_TRACE'             =>  true,
 
 );
