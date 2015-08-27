@@ -38,7 +38,6 @@ abstract class BaseController extends Controller
 
     public function index()
     {
-
         //>>3.存放查询条件
         $wheres = array();
         //>>2.接收查询参数
@@ -46,6 +45,7 @@ abstract class BaseController extends Controller
         if (!empty($keyword)) {
             $wheres['obj.name'] = array('like', "%{$keyword}%");
         }
+        $this->_setWheres($wheres);
 
         //>>1.需要$model提供分页中需要使用的数据
         /**
@@ -63,7 +63,24 @@ abstract class BaseController extends Controller
 
         //显示出当前列表的标题
         $this->assign('meta_title',$this->meta_title);
+
+        $this->_before_index_view();
+
         $this->display('index');
+    }
+
+    /**
+     * 该方法主要是被子类覆盖,用来忘wheres中添加条件
+     * @param $wheres
+     */
+    protected function _setWheres(&$wheres){
+    }
+
+    /**
+     * 被子类覆盖, 在index页面展示之前执行..
+     */
+    protected function _before_index_view(){
+
     }
 
     public function add()

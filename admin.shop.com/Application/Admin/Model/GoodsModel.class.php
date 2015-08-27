@@ -34,6 +34,32 @@ class GoodsModel extends BaseModel
     );
 
     /**
+     * 该方法主要是被子类覆盖.
+     */
+    protected function _setModel()
+    {
+        $this->field('obj.*,gc.name as goods_category_name,b.name as brand_name,s.name as supplier_name');
+        $this->join('__GOODS_CATEGORY__ as  gc on  obj.goods_category_id=gc.id');
+        $this->join('__BRAND__ as  b on obj.brand_id = b.id');
+        $this->join('__SUPPLIER__ as  s on obj.supplier_id = s.id');
+    }
+
+    /**
+     * 主要是对查询出来的数据列表进一步处理
+     */
+    protected function _handleRows(&$rows){
+        foreach($rows as &$row){
+            $goods_status = $row['goods_status'];
+            //是否为精品
+            $row['is_best'] = $goods_status & 1==0?0:1;
+            //是否为新品
+            $row['is_new'] = $goods_status & 2==0?0:1;
+            //是否为热销
+            $row['is_hot'] = $goods_status & 4==0?0:1;
+        }
+    }
+
+    /**
      * 自动处理商品状态
      * @param $goods_status  用户选择的商品状态
      */

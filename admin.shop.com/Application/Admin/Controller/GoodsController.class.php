@@ -15,6 +15,63 @@ class GoodsController extends BaseController
 {
     protected $meta_title = '商品';
 
+
+
+    protected function _setWheres(&$wheres){
+        $keyword = I('get.keyword', '');
+        if(!empty($keyword)){
+            //清空之前在BaseController中的条件
+            $wheres=array();
+
+            //拼装   ( obj.name LIKE '1%' OR obj.sn LIKE '1%' )
+            $orWheres['obj.name'] = array('like',$keyword.'%');
+            $orWheres['obj.sn'] = array('like',$keyword.'%');
+            $orWheres['_logic'] = 'or';
+            $wheres['_complex'] = $orWheres;
+        }
+
+
+
+        $goods_category_id = I('get.goods_category_id', '');
+        if(!empty($goods_category_id)){
+            $wheres['obj.goods_category_id'] = $goods_category_id;
+        }
+
+        $supplier_id = I('get.supplier_id', '');
+        if(!empty($supplier_id)){
+            $wheres['obj.supplier_id'] = $supplier_id;
+        }
+
+        $brand_id = I('get.brand_id', '');
+        if(!empty($brand_id)){
+            $wheres['obj.brand_id'] = $brand_id;
+        }
+
+
+
+    }
+
+    /**
+     * 在index页面展示之前为页面分配分类数据, 供货商数据, 品牌数据
+     */
+    protected function _before_index_view(){
+        //>>1.准备品牌数据
+        $brandModel = D('Brand');
+        $brands = $brandModel->getList('id,name');
+        $this->assign('brands',$brands);
+        //>>2.准备供货商数据
+        $supplierModel = D('Supplier');
+        $suppliers = $supplierModel->getList('id,name');
+        $this->assign('suppliers',$suppliers);
+        //>>3.准备所有的分类数据
+        $goodsCategoryModel = D('GoodsCategory');
+        $goodsCategorys = $goodsCategoryModel->getList('id,name');
+        $this->assign('goodsCategorys',$goodsCategorys);
+
+    }
+
+
+
     /**
      * 钩子方法:
      * 主要被子类覆盖.. 在编辑页面展示之前执行该方法..

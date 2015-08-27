@@ -1,5 +1,17 @@
 <?php
 <extend name="Common:index"/>
+<block name="search">
+    <div class="form-div">
+        <form action="{:U()}" name="searchForm">
+            <img src="__IMG__/icon_search.gif" width="26" height="22" border="0" alt="search" />
+            <input type="text" name="keyword" size="15" value="{$Think.get.keyword}"/>
+            {:arr2select('goods_category_id',$goodsCategorys)}
+            {:arr2select('brand_id',$brands)}
+            {:arr2select('supplier_id',$suppliers)}
+            <input type="submit" value=" 搜索 " class="button" />
+        </form>
+    </div>
+</block>
 <block name="list">
     <div class="list-div" id="listDiv">
         <input  type="button" value=" 删除 " url="{:U('changeStatus')}"   class="button ajax-post">
@@ -8,14 +20,15 @@
                 <th width="10px">全选<input type="checkbox" class="check_all"></th>
                                 <th>名称 </th>
                                 <th>货号 </th>
-                                <th>商品LOGO </th>
                                 <th>商品分类 </th>
                                 <th>品牌 </th>
                                 <th>供货商 </th>
                                 <th>市场价格 </th>
                                 <th>本店价格 </th>
-                                <th>本店价格 </th>
-                                <th>商品状态 </th>
+                                <th>库存 </th>
+                                <th>精品 </th>
+                                <th>新品 </th>
+                                <th>热销 </th>
                                 <th>是否上架 </th>
                                 <th>操作</th>
             </tr>
@@ -26,15 +39,16 @@
                         <span style="float:right">{$row.name}</span>
                     </td>
                     <td align="center">{$row.sn}</td>
-                    <td align="center">{$row.logo}</td>
-                    <td align="center">{$row.goods_category_id}</td>
-                    <td align="center">{$row.brand_id}</td>
-                    <td align="center">{$row.supplier_id}</td>
+                    <td align="center">{$row.goods_category_name}</td>
+                    <td align="center">{$row.brand_name}</td>
+                    <td align="center">{$row.supplier_name}</td>
                     <td align="center">{$row.market_price}</td>
                     <td align="center">{$row.shop_price}</td>
                     <td align="center">{$row.stock}</td>
-                    <td align="center">{$row.goods_status}</td>
-                    <td align="center">{$row.is_on_sale}</td>
+                    <td align="center"><img src="__IMG__/{$row.is_best}.gif"></td>
+                    <td align="center"><img src="__IMG__/{$row.is_new}.gif"></td>
+                    <td align="center"><img src="__IMG__/{$row.is_hot}.gif"></td>
+                    <td align="center"><img src="__IMG__/{$row.is_on_sale}.gif"></td>
                     <td align="center">
                         <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
                         <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a>
