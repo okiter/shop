@@ -73,4 +73,13 @@ class ArticleController extends BaseController
         }
     }
 
+
+    public function search($keyword=''){
+        $wheres = array();
+        $wheres['name'] = array('like',$keyword.'%');
+        $rows = $this->model->getList('id,name',$wheres);
+        //将传入进去的数据变成一个json
+        $this->ajaxReturn($rows);
+    }
+
 }

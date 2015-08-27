@@ -91,8 +91,32 @@ class GoodsModel extends BaseModel
             $this->rollback();
             return false;
         }
+        //>>5.处理商品相关文章
+        $result = $this->handleArticle($id,$requestData['article_ids']);
+        if($result===false){
+            $this->error = '添加商品文章失败!';
+            $this->rollback();
+            return false;
+        }
 
         return $this->commit();//提交事务
+    }
+
+
+    private function handleArticle($goods_id,$article_ids){
+        if(!empty($article_ids)){
+            $goodsArticleModel = M('GoodsArticle');
+            //先删除当前商品的相关文章
+            $goodsArticleModel->where(array('goods_id'=>$goods_id))->delete();
+
+            //再将这次的文章保存.
+            $rows = array();
+            foreach($article_ids as $article_id){
+                $rows[] = array('goods_id'=>$goods_id,'article_id'=>$article_id);
+            }
+            return$goodsArticleModel->addAll($rows);
+        }
+
     }
 
     /**
@@ -141,6 +165,10 @@ class GoodsModel extends BaseModel
             $gallerys  = M('GoodsGallery')->field('id,path')->where(array('goods_id'=>$id))->select();
             $goods['gallerys'] =  $gallerys;
 
+            //>>3.从goods_article表中获取相关文章的id, 再到article表中找到相关文章的name
+            $articles = M()->query("SELECT a.id,a.name FROM `goods_article` as obj  join article as a on obj.article_id=a.id  where obj.goods_id = $id");
+            $goods['articles']=$articles;
+
         }
 
         return $goods;
@@ -174,6 +202,17 @@ class GoodsModel extends BaseModel
             $this->rollback();
             return false;
         }
+
+
+        //>>5.处理商品相关文章
+        $result = $this->handleArticle($requestData['id'],$requestData['article_ids']);
+        if($result===false){
+            $this->error = '更新商品文章失败!';
+            $this->rollback();
+            return false;
+        }
+
+
         return $this->commit();
     }
 }

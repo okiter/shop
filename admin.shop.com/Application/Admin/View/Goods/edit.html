@@ -164,7 +164,7 @@
         </table>
         <table cellspacing="1" cellpadding="3" width="100%" style="display: none;">
             <tr>
-                <td>文章标题: <input type="text" name="keyword"><input type="button" value="搜索"> </td>
+                <td>文章标题: <input type="text" name="keyword" class="search-keyword"><input class="search-butoon" type="button" value="搜索"> </td>
                 <td>
                 </td>
                 <td>
@@ -172,17 +172,26 @@
             </tr>
             <tr>
                 <td>
-                    <select multiple="multiple" style="width: 500px">
+                    <select class="left_select" size="10" multiple="multiple" style="width: 500px">
                     </select>
                 </td>
                 <td>
-                    <input type="button" value=">>"><br/>
-                    <input type="button" value=">"><br/>
+                    <input class="allToRight" type="button" value=">>"><br/>
+                    <input class="selectedToRight"  type="button" value=">"><br/>
                     <input type="button" value="<"><br/>
                     <input type="button" value="<<"><br/>
                 </td>
                 <td>
-                    <select multiple="multiple"  style="width: 500px"></select>
+                    <div class="article_ids">
+                        <volist name="articles" id="article">
+                            <input type="hidden" name="article_ids[]" value="{$article.id}"/>
+                        </volist>
+                    </div>
+                    <select class="right_select" size="10" multiple="multiple" style="width: 500px">
+                        <volist name="articles" id="article">
+                            <option value="{$article.id}">{$article.name}</option>
+                        </volist>
+                    </select>
                 </td>
             </tr>
         </table>
@@ -389,6 +398,90 @@
         });
 
         //////////////////////////商品的上传-----结束//////////////////////////////////////////
+        //////////////////////////商品相关文章的搜索-----开始//////////////////////////////////////////
+        $('.search-butoon').click(function(){
+            var search_keyword = $('.search-keyword').val();
+            if(!search_keyword){
+                return false;
+            }
+
+            $('.left_select').empty();
+
+            //发送ajax请求,根据search_keyword的值进行搜索
+            $.getJSON('{:U("Article/search")}',{'keyword':search_keyword},function(rows){
+                $(rows).each(function(){
+                   $("<option value='"+this.id+"'>"+this.name+"</option>").appendTo('.left_select');
+                });
+            });
+        });
+
+        ///一定左右下拉框中的内容..
+
+        //点击左边到右边
+        $('.left_select').on('dblclick','option',function(){
+            move($(this));
+        });
+
+        //点击>>左边的全部到右边
+        $('.allToRight').on('click',function(){
+            move($('.left_select option'));
+        });
+        //点击>>左边的全部到右边
+        $('.selectedToRight').on('click',function(){
+            move($('.left_select option:selected'));
+        });
+
+
+        /**
+         * 将右边下拉框中的内容放到隐藏域中
+         */
+        function right2Hidden(){
+           var right_options =  $('.right_select option');
+            $('.article_ids').empty();
+            right_options.each(function(){
+                $('<input type="hidden" name="article_ids[]" value="'+this.value+'">').appendTo('.article_ids');
+            });
+        }
+        /**
+         * 将传递过来的options移动到右边
+         */
+        function move(left_options){
+            //>>1.判断options是否在右边存在
+               var right_options =  $('.right_select option');
+
+                //如果右边没有, 枝江将左边的放到右边
+               if(right_options.length==0){
+                   left_options.appendTo('.right_select');
+                   right2Hidden();
+                   return;
+               }
+
+               left_options.each(function(){
+                   //>>左边不在右边存在
+                   var exist = false;
+                   var left_option = this;
+                   //拿着左边的和右边的进行一个一个比对.
+                   right_options.each(function(){
+                        if(left_option.value==this.value){
+                            //>>2. 如果不存在的时候才能够移动
+                            exist = true;
+                        }
+                   })
+                   if(!exist){
+                       $(left_option).appendTo('.right_select');
+                       right2Hidden();
+                   }
+               });
+
+
+
+
+
+        }
+
+
+
+        //////////////////////////商品相关文章的搜索-----结束//////////////////////////////////////////
 
 
 
