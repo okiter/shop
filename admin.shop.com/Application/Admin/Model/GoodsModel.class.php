@@ -96,7 +96,7 @@ class GoodsModel extends BaseModel
     }
 
     /**
-     * 单独来处理商品相册数据
+     * 将相册图片路径保存到goods_gallery表中
      * @param $goods_id
      * @param $gallery_paths
      * @return bool|string
@@ -138,9 +138,8 @@ class GoodsModel extends BaseModel
 
 
             //>>2.goods_gallery表中获取当前商品的图片路径
-            $galleryPaths  = M('GoodsGallery')->field('path')->where(array('goods_id'=>$id))->select();
-            $galleryPaths = array_column($galleryPaths,'path');
-            $goods['galleryPaths'] =  $galleryPaths;
+            $gallerys  = M('GoodsGallery')->field('id,path')->where(array('goods_id'=>$id))->select();
+            $goods['gallerys'] =  $gallerys;
 
         }
 
@@ -164,6 +163,14 @@ class GoodsModel extends BaseModel
         $result = $this->handleGoodsIntro($requestData['id'],$requestData['intro']);
         if($result===false){
             $this->error = '更新简介信息失败!';
+            $this->rollback();
+            return false;
+        }
+
+        //>>3.将新上传的图片添加到goods_gallery表中
+        $result = $this->handlerGallery($requestData['id'],$requestData['gallery_path']);
+        if($result===false){
+            $this->error = '更新相册失败!';
             $this->rollback();
             return false;
         }

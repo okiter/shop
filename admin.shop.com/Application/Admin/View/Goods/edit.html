@@ -71,15 +71,15 @@
             <tr>
                 <td class="label">市场价格</td>
                 <td>
-                    <input type="text" name="market_price" maxlength="60" value="{$market_price}"/> <span
-                        class="require-field">*</span>
+                    <input type="text" name="market_price" maxlength="60" value="{$market_price}"/>
+                    <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="label">本店价格</td>
                 <td>
-                    <input type="text" name="shop_price" maxlength="60" value="{$shop_price}"/> <span
-                        class="require-field">*</span>
+                    <input type="text" name="shop_price" maxlength="60" value="{$shop_price}"/>
+                    <span  class="require-field">*</span>
                 </td>
             </tr>
             <tr>
@@ -102,19 +102,16 @@
             <tr>
                 <td class="label">状态</td>
                 <td>
-                    <input type="radio" class='status' name="status" maxlength="60" value="1"/>是<input type="radio"
-                                                                                                       class='status'
-                                                                                                       name="status"
-                                                                                                       maxlength="60"
-                                                                                                       value="0"/>否
+                    <input type="radio" class='status' name="status" maxlength="60" value="1"/>是
+                    <input type="radio" class='status' name="status"  maxlength="60"  value="0"/>否
                     <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="label">排序</td>
                 <td>
-                    <input type="text" name="sort" maxlength="60" value="{$sort|default=20}"/> <span
-                        class="require-field">*</span>
+                    <input type="text" name="sort" maxlength="60" value="{$sort|default=20}"/>
+                    <span class="require-field">*</span>
                 </td>
             </tr>
         </table>
@@ -133,13 +130,27 @@
                 </td>
             </tr>
         </table>
+        <style type="text/css">
+            .upload-pre-item{
+                position: relative;
+            }
+            .upload-pre-item a{
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                background-color: white;
+                color: red;
+                display: block;
+            }
+        </style>
         <table cellspacing="1" cellpadding="3" width="100%" style="display: none;">
             <tr>
                 <td>
                     <div class="upload-img-box" id="upload-img-box">
-                        <volist name="galleryPaths" id="galleryPath">
+                        <volist name="gallerys" id="gallery">
                             <div class="upload-pre-item" style="display: inline-block">
-                                <img src="__GOODS__/{$galleryPath}!m">
+                                <img src="__GOODS__/{$gallery.path}!m">
+                                <a dbId="{$gallery.id}" href="#">X</a>
                             </div>
                         </volist>
                     </div>
@@ -278,6 +289,7 @@
                 ztree.selectNode(node);
             </empty>
             //////////////////////////商品分类--ztree---结束//////////////////////////////////////////
+
             //////////////////////////商品的状态-----开始//////////////////////////////////////////
             <notempty name='id'>
                 //保存在数据库中的商品状态
@@ -320,11 +332,46 @@
                     var upload_item = '<div class="upload-pre-item" style="display: inline-block">\
                             <img src="__GOODS__/'+data+'!m">\
                             <input type="hidden" name="gallery_path[]" value="'+data+'" >\
+                            <a href="#">X</a>\
                      </div>'
                     $('#upload-img-box').append(upload_item);
                 }
             });
         },50);
+
+        /**
+         * 由于有的标签是页面展示后期添加上去的, 所以需要事件委派的方式添加事件处理.
+         *
+         * 事件委派: 把已存在的标签上的事件委派给新添加的标签上.
+         * 已存在的标签对象.on('事件','目标标签选择器',function(){
+         *
+         * })
+         */
+        $('.upload-img-box').on('click','.upload-pre-item a',function(){
+            //>>1.得到要删除的图片id
+            var dbId = $(this).attr('dbId');
+            //>>2.将a标签对象保存起来,为了在ajax的回调函数中使用
+            var aTag = $(this);
+            //>>3.从数据库中删除
+            if(dbId){
+                $.get('{:U('deleteGallery')}',{'gallery_id':dbId},function(data){
+                    if(data.status){
+                        //>>4.从页面中删除
+                        aTag.closest('div').remove();
+                    }
+
+                });
+            }else{
+                //如果该图片没有在数据库中, 仅仅是从页面上将该图片删除
+                aTag.closest('div').remove();
+            }
+
+
+
+
+            return false;//取消默认操作
+        });
+
         //////////////////////////商品的上传-----结束//////////////////////////////////////////
 
 

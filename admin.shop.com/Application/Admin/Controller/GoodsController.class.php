@@ -84,4 +84,19 @@ class GoodsController extends BaseController
             $this->display('edit');
         }
     }
+
+
+    /**
+     * 根据gallery_id删除goods_gallery表中的一行记录
+     * @param $gallery_id
+     */
+    public function deleteGallery($gallery_id)
+    {
+        $galleryModel = M('GoodsGallery');
+        if($galleryModel->delete($gallery_id)===false){
+            $this->error('删除失败!'.showModelError($galleryModel));
+        }else{
+            $this->success('删除成功!'.showModelError($galleryModel));
+        }
+    }
 }
