@@ -13,7 +13,7 @@ use Admin\Service\NestedSetsService;
 use Think\Model;
 use Think\Page;
 
-class PermissionModel extends BaseModel
+class MenuModel extends BaseModel
 {
     // 自动验证定义   $fields 表中的每个字段信息
     protected $_validate        =   array(
@@ -27,23 +27,61 @@ class PermissionModel extends BaseModel
     );
 
 
+    public function add($requestData){
 
-    public function add(){
+        //>>1.将菜单保存到指定一个菜单下面
         $db = new DbMysqlImpModel();
-        $nestedSetsService =  new NestedSetsService($db,'permission','lft','rght','parent_id','id','level');
-       return  $nestedSetsService->insert($this->data['parent_id'],$this->data,'bottom');
+        $nestedSetsService =  new NestedSetsService($db,'menu','lft','rght','parent_id','id','level');
+        $id = $nestedSetsService->insert($this->data['parent_id'],$this->data,'bottom');
+
+        //>>2.将菜单对应的权限保存到menu_permission表中
+        $this->handlePermission($id,$requestData['permission_ids']);
+
+        return  $id;
     }
 
 
-    public function save(){
+    public function save($requestData){
+
+        //>>1.移动
         $db = new DbMysqlImpModel();
-        $nestedSetsService =  new NestedSetsService($db,'permission','lft','rght','parent_id','id','level');
+        $nestedSetsService =  new NestedSetsService($db,'menu','lft','rght','parent_id','id','level');
         $result  = $nestedSetsService->moveUnder($this->data['id'],$this->data['parent_id']);
         if($result===false){
             $this->error = '不能够选中自己和子节点作为父节点';
             return false;
         }
-        return parent::save();
+
+        //>>2.更新当前表中的数据
+        $result = parent::save();
+        if($result===false){
+            return false;
+        }
+
+        //>>3.处理访问菜单的权限
+        $result = $this->handlePermission($requestData['id'],$requestData['permission_ids']);
+        if($result===false){
+            $this->error = '更新菜单权限的时候出错!';
+            return false;
+        }
+
+    }
+
+    /**
+     * 将menu_id和permission_id保存到menu_permission表中
+     * @param $menu_id
+     * @param $permission_ids
+     */
+    private function handlePermission($menu_id,$permission_ids){
+        $menuPermissionModel = D('MenuPermission');
+        $menuPermissionModel->where(array('menu_id'=>$menu_id))->delete();
+        if(!empty($permission_ids)){
+                $rows = array();
+                foreach($permission_ids as $permission_id){
+                    $rows[] = array('menu_id'=>$menu_id,'permission_id'=>$permission_id);
+                }
+                return $menuPermissionModel->addAll($rows);
+            }
     }
 
     /**
@@ -71,7 +109,7 @@ class PermissionModel extends BaseModel
     public function changeStatus($id, $status)
     {
         //>>1. id找到 自己以及子分类的id
-        $sql = "SELECT node.id FROM `permission` as node,`permission` as parent
+        $sql = "SELECT node.id FROM `menu` as node,`menu` as parent
 where node.lft>=parent.lft and node.rght <= parent.rght and parent.id = $id";
         $rows = $this->query($sql);
         //从二维数组中取出id的值
@@ -82,5 +120,17 @@ where node.lft>=parent.lft and node.rght <= parent.rght and parent.id = $id";
             $data['name'] = array('exp', 'concat(name,"_del")');
         }
         return parent::save($data);
+    }
+
+
+    public function find($id){
+        $menu = parent::find($id);
+        if(!empty($menu)){
+            $menuPermissionModel = M('MenuPermission');
+            $permission_ids = $menuPermissionModel->field('permission_id')->where(array('menu_id'=>$id))->select();
+            $permission_ids = array_column($permission_ids,'permission_id');
+            $menu['permission_ids'] = json_encode($permission_ids);
+        }
+        return $menu;
     }
 }

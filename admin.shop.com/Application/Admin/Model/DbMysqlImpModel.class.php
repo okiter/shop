@@ -112,7 +112,9 @@ class DbMysqlImpModel implements  DbMysqlModel
         $sets=rtrim($sets,',');
         //INSERT INTO goods_category SET ?%INSERT INTO goods_category SET name='鍘ㄦ埧鐢靛櫒',parent_id='10',intro='鍘ㄦ埧鐢靛櫒',sort='20',status='1',id='',lft='36',rght='37',level='2'
         $sql = str_replace('?%',$sets,$sql);
-        return M()->execute($sql);
+        $model = M();
+        $model->execute($sql);
+        return $model->getLastInsID();  //返回最后插入的id
     }
 
     /**
