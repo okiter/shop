@@ -13,11 +13,8 @@
             <volist name="rows" id="row">
                 <tr>
                     <td align="center"><input type="checkbox" name="id[]" class="id" value="{$row.id}"></td>
-                    <td class="first-cell">
-                        <span style="float:right">{$row.name}</span>
-                    </td>
                     <td align="center">{$row.username}</td>
-<td align="center">{$row.password}</td>
+                    <td align="center">{$row.password}</td>
                     <td align="center">
                         <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
                         <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a>

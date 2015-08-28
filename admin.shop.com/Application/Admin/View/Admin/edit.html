@@ -1,5 +1,19 @@
 <?php
 <extend name="Common:edit"/>
+<block name="css">
+    <link href="__ZTREE__/zTreeStyle.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        ul.ztree {
+            margin-top: 10px;
+            border: 1px solid #617775;
+            background: #f0f6e4;
+            width: 220px;
+            height: auto;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+    </style>
+</block>
 <block name="form">
     <form method="post" action="{:U()}">
         <table cellspacing="1" cellpadding="3" width="100%">
@@ -18,13 +32,17 @@
             <tr>
                 <td class="label">角色</td>
                 <td>
-                    <input type="text" name="password" maxlength="60" value="{$password}"/> <span class="require-field">*</span>
+                    <volist name="roles" id="role">
+                        {$role.name}<input type="checkbox" class="role_ids" name="role_ids[]" value="{$role.id}"/>
+                    </volist>
                 </td>
             </tr>
             <tr>
                 <td class="label">额外权限</td>
                 <td>
-                    <input type="text" name="password" maxlength="60" value="{$password}"/> <span class="require-field">*</span>
+                    <div id="permission_div">
+                    </div>
+                    <ul id="treeDemo" class="ztree"></ul>
                 </td>
             </tr>
             <tr>
@@ -36,4 +54,67 @@
             </tr>
         </table>
     </form>
+</block>
+
+<block name="js">
+    <script type="text/javascript" src="__ZTREE__/jquery.ztree.core-3.5.min.js"></script>
+    <script type="text/javascript" src="__ZTREE__/jquery.ztree.excheck-3.5.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+
+            var setting = {
+                check: {
+                    enable: true,
+//                    chkboxType:{ "Y" : "ps", "N" : "ps" }
+                },
+                data: {
+                    simpleData: {
+                        enable: true,
+                        pIdKey: "parent_id",
+                    }
+                },
+                callback:{
+                    //树上的复选框 选中或者是不选中该方法都执行
+                    onCheck:function(){
+                        //清空之前的内容
+                        $('#permission_div').empty();
+                        //>>1.得到用户打勾的权限
+                        var checkedNodes = ztree.getCheckedNodes(true);
+                        //>>2.将用户打勾的权限保存到隐藏域
+                        $(checkedNodes).each(function(){
+                            $('<input type="hidden" name="permission_ids[]" value="'+this.id+'">').appendTo('#permission_div');
+                        })
+                    }
+                }
+            };
+
+            var zNodes = {$permissions};
+
+            //将id=treeDemo的节点变成一个树
+            var ztree = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+            ztree.expandAll(true);
+            <notempty name='id'>
+                //为了角色赋值
+                $('.role_ids').val({$role_ids});
+
+
+
+            //>>1.得到当前角色拥有的权限id
+            var permission_ids = {$permission_ids};
+            //>>2.根据权限id找到节点
+            $(permission_ids).each(function(){
+                var node = ztree.getNodeByParam('id',this);
+                //>>3.在节点上打勾
+                /**
+                 * node: 表示选中的节点
+                 * true: 表示选中
+                 * true: 表示是否关联打勾
+                 * true: 表示是否激活选中事件
+                 */
+                ztree.checkNode(node,true,false,true);
+            });
+            </notempty>
+        });
+    </script>
 </block>
