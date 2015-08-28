@@ -47,8 +47,6 @@ class GoodsController extends BaseController
             $wheres['obj.brand_id'] = $brand_id;
         }
 
-
-
     }
 
     /**

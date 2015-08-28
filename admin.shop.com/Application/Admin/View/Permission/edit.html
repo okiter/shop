@@ -1,0 +1,133 @@
+<?php
+<extend name="Common:edit"/>
+<block name="css">
+    <link href="__ZTREE__/zTreeStyle.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        ul.ztree {
+            margin-top: 10px;
+            border: 1px solid #617775;
+            background: #f0f6e4;
+            width: 220px;
+            height: auto;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+    </style>
+</block>
+<block name="form">
+    <form method="post" action="{:U()}">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">名称</td>
+                <td>
+                    <input type="text" name="name" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">URL</td>
+                <td>
+                    <input type="text" name="url" maxlength="60" value="{$url}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">父权限</td>
+                <td>
+                    <input type="text" disabled="disabled" value="请选择.." class="parent_text" name="parent_text" maxlength="60"/>
+                    <input type="hidden" class="parent_id" name="parent_id" maxlength="60" value="{$parent_id|default=0}"/>
+                    <span class="require-field">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label"></td>
+                <td>
+                    <ul id="treeDemo" class="ztree"></ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">简介</td>
+                <td>
+                    <textarea name="intro" cols="60" rows="4">{$intro}</textarea> <span class="require-field">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">状态</td>
+                <td>
+                    <input type="radio" class='status' name="status" maxlength="60" value="1"/>是<input type="radio"
+                                                                                                       class='status'
+                                                                                                       name="status"
+                                                                                                       maxlength="60"
+                                                                                                       value="0"/>否
+                    <span class="require-field">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">排序</td>
+                <td>
+                    <input type="text" name="sort" maxlength="60" value="{$sort|default=20}"/> <span
+                        class="require-field">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><br/>
+                    <input type="hidden" name="id" value="{$id}"/>
+                    <input type="submit" class="button ajax-post" value=" 确定 "/>
+                    <input type="reset" class="button" value=" 重置 "/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</block>
+
+<block name="js">
+    <script type="text/javascript" src="__ZTREE__/jquery.ztree.core-3.5.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+
+            var setting = {
+                data: {
+                    simpleData: {
+                        enable: true,
+                        pIdKey: "parent_id",
+                    }
+                },
+                callback:{
+                    //treeNode:点击的哪个节点
+                    onClick:function(event, treeId, treeNode, clickFlag){
+                        var id = treeNode.id;  //节点在数据库中对应的id
+                        var name = treeNode.name;//节点对应的名称
+                        $('.parent_text').val(name);
+                        $('.parent_id').val(id);
+                    }
+                }
+            };
+
+            var zNodes = {$rows};
+
+            //将id=treeDemo的节点变成一个树
+            var ztree = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+
+            <empty name='id'>
+                        //添加时张开所有的节点
+                    ztree.expandAll(true);
+            <else/>
+            //编辑时
+            //>>1.从树的中找到id为  $parent_id的节点
+            var parent_id = {$parent_id};
+            var node = ztree.getNodeByParam('id',parent_id);
+            //>>2.选中找到的节点,并且将选中的节点的id,name放到父分类的表单元素中
+            ztree.selectNode(node);
+
+            var id = node.id;  //节点在数据库中对应的id
+            var name = node.name;//节点对应的名称
+            $('.parent_text').val(name);
+            $('.parent_id').val(id);
+            </empty>
+
+
+
+
+
+        });
+    </script>
+</block>

@@ -19,6 +19,11 @@ use Think\Controller;
 abstract class BaseController extends Controller
 {
     /**
+     * 是否是有post中的所有参数传递给model
+     * @var bool
+     */
+    protected $usePostParam = false;
+    /**
      * @var 需要子类使用..
      */
     protected $model;
@@ -87,7 +92,7 @@ abstract class BaseController extends Controller
     {
         if (IS_POST) {
             if ($this->model->create() !== false) { //1.接收数据  2.自动验证  3.自动完成
-                if ($this->model->add() !== false) {
+                if ($this->model->add($this->usePostParam?I('post.'):'') !== false) {
                     $this->success('保存成功!', U('index'));
                     return;
                 }
@@ -112,7 +117,7 @@ abstract class BaseController extends Controller
     {
         if (IS_POST) {
             if ($this->model->create() !== false) { //1.接收数据  2.自动验证  3.自动完成
-                if ($this->model->save() !== false) {
+                if ($this->model->save($this->usePostParam?I('post.'):'') !== false) {
                     $this->success('更新成功!', cookie('__forward__'));
                     return;
                 }
