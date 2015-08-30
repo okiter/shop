@@ -7,17 +7,18 @@
             <tr>
                 <th width="10px">全选<input type="checkbox" class="check_all"></th>
                                 <th>用户名 </th>
-                                <th>密码 </th>
+                                <th>Email </th>
                                 <th>操作</th>
             </tr>
             <volist name="rows" id="row">
                 <tr>
                     <td align="center"><input type="checkbox" name="id[]" class="id" value="{$row.id}"></td>
                     <td align="center">{$row.username}</td>
-                    <td align="center">{$row.password}</td>
+                    <td align="center">{$row.email}</td>
                     <td align="center">
                         <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
-                        <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a>
+                        <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a> |
+                        <a  class="ajax-get" href="{:U('initPassword',array('id'=>$row['id']))}" title="初始化密码">初始化密码</a>
                     </td>
                 </tr>
             </volist>

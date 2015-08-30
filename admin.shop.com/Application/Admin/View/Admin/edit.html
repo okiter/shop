@@ -20,13 +20,27 @@
             <tr>
                 <td class="label">用户名</td>
                 <td>
-                    <input type="text" name="username" maxlength="60" value="{$username}"/> <span class="require-field">*</span>
+                    <input type="text" <notempty name="id"> disabled="disabled" </notempty> name="username" maxlength="60" value="{$username}"/> <span class="require-field">*</span>
                 </td>
             </tr>
+            <empty name="id">
             <tr>
                 <td class="label">密码</td>
                 <td>
-                    <input type="text" name="password" maxlength="60" value="{$password}"/> <span class="require-field">*</span>
+                    <input type="password" name="password" maxlength="60"/> <span class="require-field">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">确认密码</td>
+                <td>
+                    <input type="password" name="repassword" maxlength="60"/> <span class="require-field">*</span>
+                </td>
+            </tr>
+            </empty>
+            <tr>
+                <td class="label">Email</td>
+                <td>
+                    <input type="text" name="email" maxlength="60" value="{$email}"/> <span class="require-field">*</span>
                 </td>
             </tr>
             <tr>
@@ -48,7 +62,7 @@
             <tr>
                 <td colspan="2" align="center"><br/>
                     <input type="hidden" name="id" value="{$id}"/>
-                    <input type="submit" class="button ajax-post" value=" 确定 "/>
+                    <input type="submit" class="button" value=" 确定 "/>
                     <input type="reset" class="button" value=" 重置 "/>
                 </td>
             </tr>

@@ -11,6 +11,9 @@ return array(
     'DB_PARAMS'    =>    array(\PDO::ATTR_CASE => \PDO::CASE_NATURAL),
 
     'PAGE_SIZE'             =>  10, //分页中每页显示的条数
-    'SHOW_PAGE_TRACE'             =>  true,
+    'SHOW_PAGE_TRACE'       =>  true,
+    'SUPER_MANAGER_NAME'    =>  'admin',
+    'NO_LOGIN_CHECK_URLS'   => array('Admin/Admin/login','Admin/Verify/index'),
 
+    'COOKIE_DOMAIN'         =>  '.shop.com',      // Cookie有效域名
 );

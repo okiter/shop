@@ -375,7 +375,7 @@ class NestedSetsService {
 		}
 
 		// check possibility
-		if ($near_key >= $item[$this->leftKey] && $near_key <= $item[$this->rightKey]) {
+		if ($near_key > $item[$this->leftKey] && $near_key < $item[$this->rightKey]) {
 			return false;
 		}
 

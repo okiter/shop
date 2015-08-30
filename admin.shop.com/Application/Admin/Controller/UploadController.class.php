@@ -41,6 +41,7 @@ class UploadController extends Controller
                 echo $uploader->getError();
             }
 
+        exit;
     }
 
 }

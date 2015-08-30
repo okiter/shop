@@ -40,6 +40,26 @@ if(!function_exists('array_column')){
    }
 }
 
+
+/**
+ * 将数组连接起来
+ * @param $arr
+ * @param string $limit
+ */
+function arr2str($arr,$limit = ','){
+     return implode($limit,$arr);
+}
+
+/**
+ * 字符串变为数组
+ * @param $str
+ * @param string $limit
+ */
+function str2arr($str,$limit = ','){
+    return explode($limit,$str);
+}
+
+
 /**
  * 将传入的数据生成一个下拉列表的html.
  * @param $name  下拉列表的名字
@@ -63,4 +83,63 @@ function arr2select($name,$rows,$defaultValue='',$valueField='id',$textField='na
            }
     $select_html .= "</select>";
     echo $select_html;
+}
+
+
+function myMd5($str,$salt){
+    return md5($str.md5($salt));
+}
+
+/**
+ * 和用户相关的函数
+ */
+
+function login($userinfo=null){
+    if(!empty($userinfo)){
+        session('USERINFO',$userinfo);
+    }else{
+        return  session('USERINFO');
+    }
+}
+
+/**
+ * 判断用户是否登录
+ * @return bool
+ */
+function isLogin(){
+    return login()!=null;
+}
+
+/**
+ * 退出登录
+ */
+function logout(){
+    session('USERINFO',null);
+    session('URLS',null);
+    session('PERMISSION_IDS',null);
+}
+
+/**
+ * 保存用户权限的URL
+ * @param null $urls
+ * @return mixed
+ */
+function savePermissionURL($urls=null){
+    if(!empty($urls)){
+        session('URLS',$urls);
+    }else{
+        return  session('URLS');
+    }
+}
+/**
+ * 保存用户权限的ID
+ * @param null $ids
+ * @return mixed
+ */
+function savePermissionId($id=null){
+    if(!empty($id)){
+        session('PERMISSION_IDS',$id);
+    }else{
+        return  session('PERMISSION_IDS');
+    }
 }
