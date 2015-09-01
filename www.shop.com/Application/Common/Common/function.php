@@ -114,9 +114,8 @@ function isLogin(){
  * 退出登录
  */
 function logout(){
-    session('USERINFO',null);
-    session('URLS',null);
-    session('PERMISSION_IDS',null);
+//    session('USERINFO',null);
+    session('[destroy]');
 }
 
 /**

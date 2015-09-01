@@ -25,6 +25,12 @@ define('THINK_PATH',dirname(ROOT_PATH).'/ThinkPHP/');
 define('RUNTIME_PATH',ROOT_PATH.'/Runtime/');
 // 绑定到Admin中
 define('BIND_MODULE','Home');
+
+//定义生成静态页面时, 放在那个目录下面
+define('HTML_PATH',ROOT_PATH.'Html/');
+
+
+
 // 引入ThinkPHP入口文件
 require THINK_PATH.'ThinkPHP.php';
 // 亲^_^ 后面不需要任何代码了 就是如此简单

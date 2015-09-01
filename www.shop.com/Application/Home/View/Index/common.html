@@ -20,12 +20,18 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到源代码书城！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li>您好，欢迎来{$Think.session.USERINFO.username}到源代码书城！
+                    <empty name="Think.session.USERINFO">
+                    [<a href="{:U('Member/login')}">登录</a>]
+                    [<a href="{:U('Member/register')}">免费注册</a>]
+                     <else/>
+                        [<a href="{:U('Member/logout')}">注销</a>]
+                    </empty>
+                </li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
                 <li>客户服务</li>
-
             </ul>
         </div>
     </div>

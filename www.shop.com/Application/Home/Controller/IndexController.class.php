@@ -4,6 +4,7 @@ use Think\Controller;
 class IndexController extends Controller {
 
     public function _initialize(){
+
         //>>1.将所有的分类从数据库从查询出来
         $goodsCategorys = S('goodsCategorys');
         if(empty($goodsCategorys)){
@@ -35,7 +36,6 @@ class IndexController extends Controller {
     }
     public function index()
     {
-
         //>>1.查询出不同状态下的手机
             $goodsModel  =  D('Goods');
             //>>1.1疯狂抢购
@@ -53,8 +53,6 @@ class IndexController extends Controller {
             //>>1.5猜你喜欢
             $is_16s = $goodsModel->getGoodsByStatus(16,5);
             $this->assign('is_16s',$is_16s);
-
-
 
 
         $this->assign('is_show',"true");
@@ -76,4 +74,5 @@ class IndexController extends Controller {
         $this->assign('meta_title','源代码商城-'.$goods['name']);
         $this->display('goods');
     }
+
 }

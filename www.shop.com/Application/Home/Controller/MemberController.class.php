@@ -62,7 +62,7 @@ class MemberController extends Controller
             if($memberModel->create()!==false){
                  if(($userinfo = $memberModel->login())!==false){
                         login($userinfo);
-                        $this->success('Index/index');
+                        $this->success('登录成功!',U('Index/index'));
                      return ;
                  }
             }
@@ -70,5 +70,10 @@ class MemberController extends Controller
         }else{
             $this->display('login');
         }
+    }
+
+    public function logout(){
+         logout();
+        $this->success('注销成功!',U('Index/index'));
     }
 }
