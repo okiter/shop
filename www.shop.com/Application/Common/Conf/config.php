@@ -19,6 +19,8 @@ return array(
         'FromName'=>'itsource'  //发送人的名称
     ),
 
+
+    //关于session的配置
     'SESSION_TYPE'			=>  'Redis',	//session类型
     'SESSION_PERSISTENT'    =>  1,		//是否长连接(对于php来说0和1都一样)
     'SESSION_CACHE_TIME'	=>  1,		//连接超时时间(秒)
@@ -27,6 +29,14 @@ return array(
     'SESSION_REDIS_HOST'	=>  '127.0.0.1', //分布式Redis,默认第一个为主服务器
     'SESSION_REDIS_PORT'	=>  '6379',	       //端口,如果相同只填一个,用英文逗号分隔
 //    'SESSION_REDIS_AUTH'    =>  'redis123',    //Redis auth认证(密钥中不能有逗号),如果相同只填一个,用英文逗号分隔
+
+
+    //配置缓存
+    'DATA_CACHE_TYPE'       =>  'Redis',  //指定驱动的名字
+    'REDIS_HOST'            =>   '127.0.0.1',
+    'REDIS_PORT'            =>   6379,
+
+
 );
 
 

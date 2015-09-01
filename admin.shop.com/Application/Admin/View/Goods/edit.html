@@ -87,7 +87,9 @@
                 <td>
                     <input type="checkbox" class="goods_status"  name="goods_status[]" value="1">精品
                     <input type="checkbox" class="goods_status" name="goods_status[]" value="2">新品
-                    <input type="checkbox" class="goods_status" name="goods_status[]" value="4">热销</td>
+                    <input type="checkbox" class="goods_status" name="goods_status[]" value="4">热销
+                    <input type="checkbox" class="goods_status" name="goods_status[]" value="8">疯狂抢购
+                    <input type="checkbox" class="goods_status" name="goods_status[]" value="16">猜你喜欢
                     <span class="require-field">*</span>
                 </td>
             </tr>
@@ -329,6 +331,12 @@
                 }
                 if((goods_status & 4)>0){
                     goods_status_temp.push(4);
+                }
+                if((goods_status & 8)>0){
+                    goods_status_temp.push(8);
+                }
+                if((goods_status & 16)>0){
+                    goods_status_temp.push(16);
                 }
                 $('.goods_status').val(goods_status_temp);
             </notempty>
