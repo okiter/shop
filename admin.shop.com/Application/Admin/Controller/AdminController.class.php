@@ -69,8 +69,6 @@ class AdminController extends BaseController
                         //>>4.将权限的id保存到session中
                         savePermissionId(array_column($permissions,'id'));
 
-
-
                         //如果用户选中了保存登录信息, 将用户id和密码加密后保存到cookie中
                         cookie('uid',$userinfo['id'],60*60*24*7);
                         cookie('pk',myMd5($userinfo['password'],$userinfo['salt']),60*60*24*7);

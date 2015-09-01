@@ -1,0 +1,39 @@
+1. 前提: 重新安装php必须加上  --enable-maintainer-zts(线程安全)
+    #安装php5
+    cd ..
+    rm -rf php-5.4.42 /usr/local/php
+    tar -zxvf php-5.4.42.tar.gz
+    cd php-5.4.42
+    #配置
+    ./configure --prefix=/usr/local/php \
+    --enable-fpm  \
+    --with-config-file-path=/usr/local/php/etc/ \
+    --with-mysql=mysqlnd \
+    --with-pdo-mysql=mysqlnd \
+    --with-mysqli=mysqlnd \
+    --with-freetype-dir=/usr/local/freetype \
+    --with-gd \
+    --with-zlib \
+    --with-libxml-dir=/usr/local/libxml2 \
+    --with-jpeg-dir=/usr/local/jpeg \
+    --with-png-dir=/usr/local/libpng \
+    --enable-mbstring=all \
+    --enable-mbregex --enable-shared  --enable-maintainer-zts
+    #编译和安装
+    make && make install
+
+
+2. 安装
+    tar -zxvf pthreads-2.0.10.tgz
+    cd pthreads
+
+    /usr/local/php/bin/phpize      这个phpize是安装php模块的
+    ./configure --with-php-config=/usr/local/php/bin/php-config
+
+    make  && make install
+
+    2.3 在php.ini中配置
+        extension=pthreads.so
+    2.4 重启php-fpm
+        service php-fpm restart
+
