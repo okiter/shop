@@ -143,6 +143,7 @@ class Redis {
 	public function read($sessID) {
 		$this->connect(0);
 		$this->get_result = $this->handler->get($this->options['prefix'].$sessID);
+
         return $this->get_result;
 	}
 
@@ -157,7 +158,7 @@ class Redis {
 	  +----------------------------------------------------------
 	 */
 	public function write($sessID, $sessData) {
-		if (!$sessData || $sessData == $this->get_result) {
+		if ($sessData && $sessData == $this->get_result) {
 			return true;
 		}
 		$this->connect(1);
@@ -200,26 +201,7 @@ class Redis {
 		return true;
 	}
 
-	/**
-	  +----------------------------------------------------------
-	 * 打开Session 
-	  +----------------------------------------------------------
-	 * @access public 
-	  +----------------------------------------------------------
-	 * @param string $savePath 
-	 * @param mixed $sessName  
-	  +----------------------------------------------------------
-	 */
-	public function execute() {
-		session_set_save_handler(
-				array(&$this, "open"),
-				array(&$this, "close"),
-				array(&$this, "read"),
-				array(&$this, "write"),
-				array(&$this, "destroy"),
-				array(&$this, "gc")
-		);
-	}
+
 	
 	public function __destruct() {
 		if ($this->options['persistent'] == 'pconnect') {

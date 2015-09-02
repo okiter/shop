@@ -1,0 +1,27 @@
+1. 购物车中保存什么数据
+购买商品是需要将
+goods_id   amount
+  1        2
+保存起来
+
+2. 购买中的数据保存到哪里?
+  2.1 没有登录的情况下
+      将购物数据保存到cookie中
+          将以下数组序列化之后保存到cookie中
+          array(
+            array('goods_id'=>1,'amount'=>1),
+            array('goods_id'=>2,'amount'=>1),
+            array('goods_id'=>3,'amount'=>1),
+          )
+
+          从cookie中取出后需要反序列化
+
+  2.2 登录的情况
+      登录时需要将数据保存到数据库中,需要使用用户id来区分.
+        goods_id   amount  member_id
+          1        2        1
+          2        2        1
+          3        2        1
+          4        2        1
+
+  2.3 当用户登录的时候将cookie中的数据合并到数据库中,并且删除cookie购物数据.

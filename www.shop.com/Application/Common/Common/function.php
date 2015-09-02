@@ -114,8 +114,8 @@ function isLogin(){
  * 退出登录
  */
 function logout(){
-//    session('USERINFO',null);
-    session('[destroy]');
+    session('USERINFO',null);
+//    session('[destroy]');
 }
 
 /**
@@ -202,4 +202,15 @@ function sendMail($address,$subject,$content){
     } else {
         return true;
     }
+}
+
+
+/**
+ * 得到redis客户端
+ * @return Redis
+ */
+function getRedis(){
+    $redis = new \Redis();
+    $redis->connect('127.0.0.1');
+    return $redis;
 }

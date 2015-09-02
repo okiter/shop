@@ -62,7 +62,21 @@ class MemberController extends Controller
             if($memberModel->create()!==false){
                  if(($userinfo = $memberModel->login())!==false){
                         login($userinfo);
-                        $this->success('登录成功!',U('Index/index'));
+
+
+                        //将cookie中的购物车数据保存到数据库表shopping_car中
+                        $shoppingCarModel = D('ShoppingCar');
+                        $shoppingCarModel->cookie2db();
+
+
+                        //登录之后原路返回
+                        $return_url = session('return_url');
+                        if(empty($return_url)){
+                            $return_url = U('Index/index');
+                        }else{
+                            session('return_url',null);
+                        }
+                        $this->success('登录成功!',$return_url);
                      return ;
                  }
             }
@@ -75,5 +89,12 @@ class MemberController extends Controller
     public function logout(){
          logout();
         $this->success('注销成功!',U('Index/index'));
+    }
+
+    public function getUserInfo(){
+        if(isLogin()){
+            $user = login();
+            $this->ajaxReturn($user);
+        }
     }
 }

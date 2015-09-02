@@ -73,6 +73,19 @@ class IndexController extends Controller {
 
         $this->assign('meta_title','源代码商城-'.$goods['name']);
         $this->display('goods');
+
+    }
+
+
+
+    public function test1(){
+        session('a','aaa');
+    }
+    public function test2(){
+        session('a',null);
+    }
+    public function test3(){
+        dump(session('a'));
     }
 
 }

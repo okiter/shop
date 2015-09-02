@@ -199,7 +199,7 @@
 						<li><span>上架时间：</span>{:date('Y-m-d',$inputtime)}</li>
 						<li class="star"><span>商品评分：</span> <strong></strong><a href="">(已有21人评价)</a></li> <!-- 此处的星级切换css即可 默认为5星 star4 表示4星 star3 表示3星 star2表示2星 star1表示1星 -->
 					</ul>
-					<form action="" method="post" class="choose">
+					<form action="{:U('ShoppingCar/add')}" method="post" class="choose">
 						<ul>
 							<li class="product">
 								<dl>
@@ -241,6 +241,7 @@
 								<dl>
 									<dt>&nbsp;</dt>
 									<dd>
+										<input type="hidden" name="goods_id" value="{$Think.get.id}">
 										<input type="submit" value="" class="add_btn" />
 									</dd>
 								</dl>
@@ -466,7 +467,7 @@
 
 						<!--  评论表单 start-->
 						<div class="comment_form mt20">
-							<form action="">
+							<form action="" method="post">
 								<ul>
 									<li>
 										<label for=""> 评分：</label>
@@ -530,4 +531,29 @@
 	</div>
 	<!-- 商品页面主体 end -->
 
+</block>
+<block name="js">
+	<script type="text/javascript" src="__JS__/goods.js"></script>
+	<script type="text/javascript" src="__JS__/jqzoom-core.js"></script>
+
+	<!-- jqzoom 效果 -->
+	<script type="text/javascript">
+		$(function(){
+			$('.jqzoom').jqzoom({
+				zoomType: 'standard',
+				lens:true,
+				preloadImages: false,
+				alwaysOn:false,
+				title:false,
+				zoomWidth:400,
+				zoomHeight:400
+			});
+		})
+	</script>
+	<script type="text/javascript">
+		$(function(){
+			var goods_id = {$id};
+			$.get('{:U("GoodsClick/click")}',{id:goods_id});
+		});
+	</script>
 </block>

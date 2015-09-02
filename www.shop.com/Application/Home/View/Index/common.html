@@ -20,13 +20,9 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来{$Think.session.USERINFO.username}到源代码书城！
-                    <empty name="Think.session.USERINFO">
+                <li id="userinfo">您好，欢迎来到源代码书城！
                     [<a href="{:U('Member/login')}">登录</a>]
                     [<a href="{:U('Member/register')}">免费注册</a>]
-                     <else/>
-                        [<a href="{:U('Member/logout')}">注销</a>]
-                    </empty>
                 </li>
                 <li class="line">|</li>
                 <li>我的订单</li>
@@ -113,7 +109,7 @@
         <div class="cart fl">
             <dl>
                 <dt>
-                    <a href="flow1.html">去购物车结算</a>
+                    <a href="{:U('ShoppingCar/lst')}">去购物车结算</a>
                     <b></b>
                 </dt>
                 <dd>
@@ -238,6 +234,17 @@
 <!-- 底部版权 end -->
 <script type="text/javascript" src="__JS__/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="__JS__/header.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $.getJSON('{:U("Member/getUserInfo")}',function(data){
+            if(data){
+                //如果data中有值的情况, 说明已经登录
+                var html = '<li>您好，欢迎'+data.username+'来到源代码书城![<a href="/index.php/Member/logout.html">注销</a>] </li>';
+                $('#userinfo').html(html);
+            }
+        });
+    });
+</script>
 <block name="js"></block>
 </body>
 </html>
