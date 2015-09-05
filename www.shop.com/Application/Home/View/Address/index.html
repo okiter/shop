@@ -10,8 +10,6 @@
 	<link rel="stylesheet" href="__CSS__/address.css" type="text/css">
 	<link rel="stylesheet" href="__CSS__/bottomnav.css" type="text/css">
 	<link rel="stylesheet" href="__CSS__/footer.css" type="text/css">
-
-
 </head>
 <body>
 		<!-- 顶部导航 start -->
@@ -462,32 +460,27 @@
 		<div class="content fl ml10">
 			<div class="address_hd">
 				<h3>收货地址薄</h3>
-				<dl>
-					<dt>1.王超平 北京市 昌平区 建材城西路金燕龙办公楼一层 13555555555 </dt>
+				<volist name="addresses" id="address">
+				<dl id="{$address.id}" class="last"> <!-- 最后一个dl 加类last -->
+					<dt>{$key+1}.{$address.name} {$address.province_name} {$address.city_name} {$address.area_name} {$address.detail_address} {$address.tel} </dt>
 					<dd>
-						<a href="">修改</a>
+						<a class="edit" href="{:U('Address/edit',array('id'=>$address['id']))}">修改</a>
 						<a href="">删除</a>
-						<a href="">设为默认地址</a>
+						<eq name="address.is_default" value="0">
+						<a class="ajax-get" href="{:U('Address/setDefault',array('id'=>$address['id']))}">设为默认地址</a>
+						</eq>
 					</dd>
 				</dl>
-				<dl class="last"> <!-- 最后一个dl 加类last -->
-					<dt>2.王超平 湖北省 武汉市 武昌 关山光谷软件园1号201 13333333333 </dt>
-					<dd>
-						<a href="">修改</a>
-						<a href="">删除</a>
-						<a href="">设为默认地址</a>
-					</dd>
-				</dl>
-
+				</volist>
 			</div>
 
 			<div class="address_bd mt10">
 				<h4>新增/修改收货地址</h4>
-				<form action="" name="address_form">
+				<form class="address_form" action="" name="address_form">
 						<ul>
 							<li>
 								<label for=""><span>*</span>收 货 人：</label>
-								<input type="text" name="" class="txt" />
+								<input type="text" name="name" class="txt name" />
 							</li>
 							<li>
 								<label for=""><span>*</span>所在地区：</label>
@@ -503,19 +496,20 @@
 							</li>
 							<li>
 								<label for=""><span>*</span>详细地址：</label>
-								<input type="text" name="" class="txt address"  />
+								<input type="text" name="detail_address" class="txt address detail_address"  />
 							</li>
 							<li>
 								<label for=""><span>*</span>手机号码：</label>
-								<input type="text" name="" class="txt" />
+								<input type="text" name="tel" class="txt tel" />
 							</li>
 							<li>
 								<label for="">&nbsp;</label>
-								<input type="checkbox" name="" class="check" />设为默认地址
+								<input type="checkbox" name="is_default" value="1" class="check is_default" />设为默认地址
 							</li>
 							<li>
 								<label for="">&nbsp;</label>
-								<input type="submit" name="" class="btn" value="保存" />
+								<input type="hidden" class="id" name="id"/>
+								<input type="submit" name="" class="btn submit_address_form" value="保存" />
 							</li>
 						</ul>
 					</form>
@@ -621,6 +615,8 @@
 		<script type="text/javascript" src="__JS__/jquery-1.8.3.min.js"></script>
 		<script type="text/javascript" src="__JS__/header.js"></script>
 		<script type="text/javascript" src="__JS__/home.js"></script>
+		<script type="text/javascript" src="__LAYER__"></script>
+		<script type="text/javascript" src="__JS__/common.js"></script>
 		<script type="text/javascript">
 			$(function(){
 
@@ -652,6 +648,121 @@
 					}
 
 				});
+
+
+				$('.submit_address_form').click(function(){
+					//>>1.获取表单中的数据
+						var params = $('.address_form').serialize();
+					//>>2.通过ajax提交表单中的数据
+					/**
+					 * $.post : 提交数据到服务器上时使用
+					 * $.getJSON: 从服务器上取出数据,并且数据为json格式的话,使用getJSON
+					 *
+					 * $.get :  可以指定数据类型
+					 */
+					$.post('{:U("Address/add")}',params,function(data){
+							//ajax执行成功之后返回的数据中一定要有id
+
+							//>>3.当保存成功时,将请求数据放到上面
+							var name = $('.name').val();
+							var detal_address = $('.detail_address').val();
+							var tel = $('.tel').val();
+							var province_text = $('.province_id option:selected').text();
+							var city_text = $('.city_id option:selected').text();
+							var area_text = $('.area_id option:selected').text();
+
+
+						   //当有id时,说明是编辑, 编辑的话需要将原来的删除..
+							var id = $('.id').val();
+							if(id){
+								$('#'+id).remove();
+							}
+
+
+
+							//得到页面上一共有几个dl,生成要添加的索引编号
+							var index  =$('.address_hd dl').length + 1;
+
+							var html = '<dl class="last">\
+									<dt>'+index+'.'+name+' '+province_text+' '+city_text+' '+area_text+' '+detal_address+' '+tel+' </dt>\
+										<dd>\
+										<a href="">修改</a>\
+												<a href="">删除</a>\
+												<a href="">设为默认地址</a>\
+										</dd>\
+										</dl>';
+						$(html).appendTo('.address_hd');
+
+						$('.address_form')[0].reset();//清空表单中的数据
+
+					});
+					return false;//取消默认提交
+				});
+
+
+
+
+				//当点击class='edit'的连接时,进行编辑回显
+				$('.edit').click(function(){
+					var url = $(this).attr('href');
+
+					//>>1.根据url地址得到一行数据
+					$.getJSON(url,function(row){
+						//>>2.再将这行数据在页面上回显
+						$('.name').val(row.name);
+						$('.detail_address').val(row.detail_address);
+						$('.tel').val(row.tel);
+						$('.is_default').val([row.is_default]);
+						$('.id').val([row.id]);
+
+
+						//>>3.设置所在地区 的值
+						$('.province_id').val(row.province_id);
+
+						//>>4.根据省份id发送ajax得到城市的数据..
+						$.getJSON('{:U("Locations/getChildren")}',{'parent_id':row.province_id},function(rows){
+							//>>5.根据城市的数据构建城市的option
+							$(rows).each(function(){
+								$("<option value='"+this.id+"'>"+this.name+"</option>").appendTo('.city_id');
+							});
+								//>>6.再选中城市
+							$('.city_id').val(row.city_id);
+
+								//>>7.根据城市的id发送ajax请求,得到区县的数据
+								$.getJSON('{:U("Locations/getChildren")}',{'parent_id':row.city_id},function(rows){
+									//>>8.区县的数据构建option,放到area_id的下拉框中
+									$(rows).each(function(){
+										$("<option value='"+this.id+"'>"+this.name+"</option>").appendTo('.area_id');
+									});
+									//>>9.选中区县
+									$('.area_id').val(row.area_id);
+								});
+
+						});
+
+
+						/*
+						$('.province_id').change();
+
+						$("<option value='"+row.city_id+"'>"+row.city_name+"</option>").appendTo('.city_id');
+						$(".city_id").val(row.city_id);
+
+
+						//激活城市的change事件, 加载区县
+						$('.city_id').change();
+						$("<option value='"+row.area_id+"'>"+row.area_name+"</option>").appendTo('.area_id');
+						$(".area_id").val(row.area_id);
+						*/
+
+					});
+
+
+					return false; //取消默认操作
+				});
+
+
+
+
 
 			});
 		</script>
