@@ -20,7 +20,11 @@
 			</div>
 			<div class="topnav_right fr">
 				<ul>
-					<li>您好，欢迎来到源代码教育！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+					<empty name="Think.session.USERINFO">
+						<li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+						<else/>
+						<li>您好，欢迎{$Think.session.USERINFO.username}来到京西！[<a href="{:U('Member/logout')}">注销</a>]</li>
+					</empty>
 					<li class="line">|</li>
 					<li>我的订单</li>
 					<li class="line">|</li>
@@ -504,7 +508,7 @@
 							</li>
 							<li>
 								<label for="">&nbsp;</label>
-								<input type="checkbox" name="is_default" value="1" class="check is_default" />设为默认地址
+								<input type="checkbox" name="is_default" checked="checked" value="1" class="check is_default" />设为默认地址
 							</li>
 							<li>
 								<label for="">&nbsp;</label>
@@ -672,13 +676,6 @@
 							var area_text = $('.area_id option:selected').text();
 
 
-						   //当有id时,说明是编辑, 编辑的话需要将原来的删除..
-							var id = $('.id').val();
-							if(id){
-								$('#'+id).remove();
-							}
-
-
 
 							//得到页面上一共有几个dl,生成要添加的索引编号
 							var index  =$('.address_hd dl').length + 1;
@@ -691,7 +688,16 @@
 												<a href="">设为默认地址</a>\
 										</dd>\
 										</dl>';
-						$(html).appendTo('.address_hd');
+
+						//当有id时,说明是编辑, 编辑的话需要将原来的删除..
+						var id = $('.id').val();
+						if(id){
+							$('#'+id).replaceWith(html);
+						}else{
+							$(html).appendTo('.address_hd');
+						}
+
+
 
 						$('.address_form')[0].reset();//清空表单中的数据
 
