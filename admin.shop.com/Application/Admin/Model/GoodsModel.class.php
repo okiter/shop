@@ -124,10 +124,42 @@ class GoodsModel extends BaseModel
             $this->rollback();
             return false;
         }
+        //>>6.处理会员价格
+        $result = $this->handleMemberPrice($id,$requestData['member_goods_price']);
+        if($result===false){
+            $this->error = '处理会员价格失败!';
+            $this->rollback();
+            return false;
+        }
 
         return $this->commit();//提交事务
     }
 
+
+    /**
+     * 将商品的会员价格保存到数据库中
+     * @param $goods_id
+     * @param $member_goods_prices
+     *
+     *
+     *  ["member_goods_price"] => array(3) {
+            [1] => string(3) "100"    键: 会员级别id  值: 会员价格
+            [2] => string(2) "90"
+            [3] => string(2) "80"
+    }
+     */
+    private function handleMemberPrice($goods_id,$member_goods_prices){
+
+        $rows = array();
+        foreach($member_goods_prices as $member_level_id=>$price){
+            $rows[] =  array('member_level_id'=>$member_level_id,'price'=>$price,'goods_id'=>$goods_id);
+        }
+
+        if(!empty($rows)){
+            $memberGoodsPriceModel = M('MemberGoodsPrice');
+            return $memberGoodsPriceModel->addAll($rows);
+        }
+    }
 
     private function handleArticle($goods_id,$article_ids){
         if(!empty($article_ids)){
@@ -194,6 +226,19 @@ class GoodsModel extends BaseModel
             //>>3.从goods_article表中获取相关文章的id, 再到article表中找到相关文章的name
             $articles = M()->query("SELECT a.id,a.name FROM `goods_article` as obj  join article as a on obj.article_id=a.id  where obj.goods_id = $id");
             $goods['articles']=$articles;
+
+
+            //>>4.需要根据商品的id查询出该商品的会员价格
+            $memberGoodsPriceModel = M('MemberGoodsPrice');
+            $memberGoodsPrices = $memberGoodsPriceModel->field('member_level_id,price')->where(array('goods_id'=>$id))->select();
+            if(!empty($memberGoodsPrices)){
+                //将$memberGoodsPrices中的member_level_id 作为索引, price作为索引的值
+                $member_level_ids = array_column($memberGoodsPrices,'member_level_id');
+                $prices = array_column($memberGoodsPrices,'price');
+
+                $memberGoodsPrices = array_combine($member_level_ids,$prices);
+                $goods['memberGoodsPrices'] = $memberGoodsPrices;
+            }
 
         }
 

@@ -1,0 +1,129 @@
+<?php
+<extend name="Common:edit"/>
+<block name="form">
+    <form method="post" action="{:U()}">
+        <table cellspacing="1" cellpadding="3" width="100%">
+                        <tr>
+                <td class="label">订单号，唯一</td>
+                <td>
+                   <input type="text" name="sn" maxlength="60" value="{$sn}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">会员ID</td>
+                <td>
+                   <input type="text" name="member_id" maxlength="60" value="{$member_id}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">收货人</td>
+                <td>
+                   <input type="text" name="name" maxlength="60" value="{$name}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">省份</td>
+                <td>
+                   <input type="text" name="province_name" maxlength="60" value="{$province_name}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">城市</td>
+                <td>
+                   <input type="text" name="city_name" maxlength="60" value="{$city_name}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">区县</td>
+                <td>
+                   <input type="text" name="area_name" maxlength="60" value="{$area_name}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">详细地址</td>
+                <td>
+                   <input type="text" name="detail_address" maxlength="60" value="{$detail_address}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">手机号</td>
+                <td>
+                   <input type="text" name="tel" maxlength="60" value="{$tel}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">配送方式的ID</td>
+                <td>
+                   <input type="text" name="delivery_id" maxlength="60" value="{$delivery_id}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">配送方式的名字</td>
+                <td>
+                   <input type="text" name="delivery_name" maxlength="60" value="{$delivery_name}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">运费</td>
+                <td>
+                   <input type="text" name="delivery_price" maxlength="60" value="{$delivery_price}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">支付方式</td>
+                <td>
+                   <input type="text" name="pay_type" maxlength="60" value="{$pay_type}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">发票ID</td>
+                <td>
+                   <input type="text" name="invoice_id" maxlength="60" value="{$invoice_id}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">发票金额</td>
+                <td>
+                   <input type="text" name="price" maxlength="60" value="{$price}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">发票时间</td>
+                <td>
+                   <input type="text" name="inputtime" maxlength="60" value="{$inputtime}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">订单状态</td>
+                <td>
+                   <input type="text" name="order_status" maxlength="60" value="{$order_status}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">物流状态</td>
+                <td>
+                   <input type="text" name="shipping_status" maxlength="60" value="{$shipping_status}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">支付状态</td>
+                <td>
+                   <input type="text" name="pay_status" maxlength="60" value="{$pay_status}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">支付宝交易号</td>
+                <td>
+                   <input type="text" name="trade_no" maxlength="60" value="{$trade_no}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td colspan="2" align="center"><br />
+                    <input type="hidden" name="id" value="{$id}" />
+                    <input type="submit" class="button ajax-post" value=" 确定 " />
+                    <input type="reset" class="button" value=" 重置 " />
+                </td>
+            </tr>
+        </table>
+    </form>
+</block>

@@ -1,0 +1,34 @@
+写在前面
+yum -y install openssl-devel
+
+
+安装OpenSSL的软件
+1. 下载
+http://www.openssl.org/source/openssl-1.0.1p.tar.gz
+
+2. 配置
+./config --prefix=/usr/local/openssl
+
+3. 安装
+make && make install
+
+
+
+安装php的openssl扩展:
+1. 进入php的源代码文件夹openssl扩展目录
+ cd /usr/local/src/php-5.4.42/ext/openssl/
+
+2.在该文件夹下执行,生成配置信息
+/usr/local/php/bin/phpize
+
+如果提示:  Cannot find config.m4.  请执行以下代码:
+mv config0.m4  config.m4
+
+6. 配置
+./configure --with-openssl=/usr/local/openssl --with-php-config=/usr/local/php/bin/php-config
+
+7. 编译和安装
+make && make install
+
+
+8. 需要在php.ini中配置

@@ -1,0 +1,46 @@
+<?php
+<extend name="Common:index"/>
+<block name="list">
+    <div class="list-div" id="listDiv">
+        <input  type="button" value=" 删除 " url="{:U('changeStatus')}"   class="button ajax-post">
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th width="10px">全选<input type="checkbox" class="check_all"></th>
+                                <th>名称</th>
+                                <th>订单号，唯一 </th>
+                                <th>手机号 </th>
+                                <th>配送方式的名字 </th>
+                                <th>运费 </th>
+                                <th>发票金额 </th>
+                                <th>发票时间 </th>
+                                <th>订单状态 </th>
+                                <th>物流状态 </th>
+                                <th>支付状态 </th>
+                                <th>操作</th>
+            </tr>
+            <volist name="rows" id="row">
+                <tr>
+                    <td align="center"><input type="checkbox" name="id[]" class="id" value="{$row.id}"></td>
+                    <td class="first-cell">
+                        <span style="float:right">{$row.name}</span>
+                    </td>
+                    <td align="center">{$row.sn}</td>
+                    <td align="center">{$row.tel}</td>
+                    <td align="center">{$row.delivery_name}</td>
+                    <td align="center">{$row.delivery_price}</td>
+                    <td align="center">{$row.price}</td>
+                    <td align="center">{$row.inputtime}</td>
+                    <td align="center">{$row.order_status}</td>
+                    <td align="center">{$row.shipping_status}</td>
+                    <td align="center">{$row.pay_status}</td>
+                    <td align="center">
+                        <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
+                        <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a> |
+                        <a  href="{:U('send',array('id'=>$row['id']))}" title="发货">发货</a>
+                    </td>
+                </tr>
+            </volist>
+        </table>
+        <div id="turn-page" class="page">{$pageHtml}</div>
+    </div>
+</block>

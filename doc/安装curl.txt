@@ -1,10 +1,13 @@
-下载:
-wget http://curl.haxx.se/download/curl-7.43.0.tar.gz
-安装curl
-tar zxf curl-7.43.0.tar.gz
-./configure --prefix=/usr/local/curl
-make
-make install
+
+安装curl软件
+
+1.wget http://curl.haxx.se/download/curl-7.44.0.tar.gz
+2.安装curl
+    tar zxf curl-7.44.0.tar.gz
+    ./configure --prefix=/usr/local/curl --with-ssl=/usr/local/openssl/
+    make
+    make install
+
 
 
 安装curl的php扩展:

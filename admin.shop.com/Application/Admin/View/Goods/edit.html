@@ -20,6 +20,7 @@
         <p>
             <span class="tab-front">通用信息</span>
             <span class="tab-back">详细描述</span>
+            <span class="tab-back">会员价格</span>
             <span class="tab-back">商品属性</span>
             <span class="tab-back">商品相册</span>
             <span class="tab-back">关联文章</span>
@@ -123,6 +124,16 @@
                     <textarea id="intro" name="intro">{$intro}</textarea>
                 </td>
             </tr>
+        </table>
+        <table cellspacing="1" cellpadding="3" width="100%" style="display: none;">
+            <volist name="memberLevels" id="memberLevel">
+                <tr>
+                    <td class="label">{$memberLevel.name}</td>
+                    <td>
+                        <input type="text" name="member_goods_price[{$memberLevel.id}]" maxlength="60" value="{$memberGoodsPrices[$memberLevel['id']]}"/> <span class="require-field">*</span>
+                    </td>
+                </tr>
+            </volist>
         </table>
         <table cellspacing="1" cellpadding="3" width="100%" style="display: none;">
             <tr>

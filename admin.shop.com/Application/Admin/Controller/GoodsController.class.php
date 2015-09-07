@@ -89,6 +89,12 @@ class GoodsController extends BaseController
         $supplierModel = D('Supplier');
         $suppliers = $supplierModel->getList('id,name');
         $this->assign('suppliers',$suppliers);
+
+        //>>4.查询出会员级别的数据
+        $memberLevelModel = D('MemberLevel');
+        $memberLevels = $memberLevelModel->getList('id,name');
+        $this->assign('memberLevels',$memberLevels);
+
     }
 
 
