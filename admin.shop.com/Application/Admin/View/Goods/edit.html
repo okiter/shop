@@ -137,11 +137,19 @@
         </table>
         <table cellspacing="1" cellpadding="3" width="100%" style="display: none;">
             <tr>
-                <td class="label">商品属性</td>
+                <td class="label">类型</td>
                 <td>
-                    <input type="text" name="" maxlength="60" value="{$name}"/> <span class="require-field">*</span>
+                    {:arr2select('goods_type_id',$goodsTypes,$goods_type_id)}
+                    <span class="require-field">*</span>
                 </td>
             </tr>
+            <tr>
+                <td colspan="2">
+                    <hr/>
+                </td>
+            </tr>
+            <tbody id="attribute_list">
+            </tbody>
         </table>
         <style type="text/css">
             .upload-pre-item{
@@ -501,6 +509,73 @@
 
 
         //////////////////////////商品相关文章的搜索-----结束//////////////////////////////////////////
+
+
+
+        //////////////////////////生成商品属性----开始//////////////////////////////////////////
+        $('.goods_type_id').change(function(){
+            var goods_type_id = $(this).val();
+            if(!goods_type_id){
+                return false;
+            }
+
+            $.getJSON("{:U('Attribute/getByGoodsTypeId')}",{'goods_type_id':goods_type_id},function(rows){
+               createAttributeForm(rows);
+            });
+
+        });
+        /**
+         *   类型(attribute_type)      (录入方式)input_type      option_value(可选值)     生成表单元素
+             1=单值                     1=手工录入                                     <input type='text'
+             1=单值                     2=从下面的列表中选择                            使用可选值中提供的数据生成下列列表
+             1=单值                     3=多行文本框                                   文本域<textarea
+             2=多值                     2=从下面的列表中选择                            使用可选值 生成复选框
+         */
+        function createAttributeForm(rows){
+            $('#attribute_list').empty(); //把之前的清除掉.
+            $(rows).each(function(){
+                var attribute_id = this.id;
+                var tr = '<tr><td class="label">'+this.name+':</td><td>';
+                //1.如果是单值
+                if(this.attribute_type==1){
+                    //1.1手工录入
+                    if(this.input_type==1){
+                        tr+= '<input name="goods_attribute['+attribute_id+']" type="text"/>';
+
+                        //1.2 从下面的列表中选择
+                    }else if(this.input_type==2){
+                        tr+= '<select  name="goods_attribute['+attribute_id+']" >';
+                        $(this.option_value).each(function(){
+                            tr+= '<option value="'+this+'">'+this+'</option>';
+                        });
+                        tr+= '</select>';
+                        //1.3 文本域
+                    }else if(this.input_type==3){
+                        tr+='<textarea  name="goods_attribute['+attribute_id+']"></textarea>';
+                    }
+                }else if(this.attribute_type==2){
+                    //如果是多值的情况下 复选框
+                    $(this.option_value).each(function(){
+                        tr+= '<input  name="goods_attribute['+attribute_id+'][]"  type="checkbox" value="'+this+'"/>'+this;
+                    });
+                }
+
+                tr+='</td></tr>';
+                $(tr).appendTo('#attribute_list');
+            });
+        }
+
+        <notempty name='id'>
+             //>>1.查询出 类型下面的属性,创建出属性的表单元素
+             var attributes = {$attributes};
+             createAttributeForm(attributes);
+            //>>2. 为上面创建出来的表单元素赋值
+            var goods_attributes = {$goods_attributes};
+             for(var p  in goods_attributes){
+                 $(':input[name*="goods_attribute['+p+']"]').val(goods_attributes[p]);
+             }
+        </notempty>
+        //////////////////////////生成商品属性----结束//////////////////////////////////////////
 
 
 

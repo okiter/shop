@@ -1,0 +1,124 @@
+<?php
+<extend name="Common:edit"/>
+<block name="form">
+    <form method="post" action="{:U()}">
+        <table cellspacing="1" cellpadding="3" width="100%">
+                        <tr>
+                <td class="label">名称</td>
+                <td>
+                   <input type="text" name="name" maxlength="60" value="{$name}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">商品类型</td>
+                <td>
+                    {:arr2select('goods_type_id',$goodsTypes,I('get.goods_type_id',$goods_type_id))}
+                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">类型</td>
+                <td>
+                   <input type="radio"  class="attribute_type"    name="attribute_type" maxlength="60" value="1"/>单值
+                    <input type="radio"    class="attribute_type"   name="attribute_type" maxlength="60" value="2"/>多值                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">录入方式</td>
+                <td>
+                   <input type="radio" class="input_type"     name="input_type" maxlength="60" value="1"/>手工录入
+                    <input type="radio"  class="input_type"      name="input_type" maxlength="60" value="2"/>从下面的列表中选择
+                    <input type="radio"  class="input_type"      name="input_type" maxlength="60" value="3"/>多行文本框                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">可选值</td>
+                <td>
+                   <textarea  name="option_value" class="option_value" cols="60" rows="4">{$option_value}</textarea>                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">简介</td>
+                <td>
+                   <textarea  name="intro" cols="60" rows="4">{$intro}</textarea>                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">状态</td>
+                <td>
+                   <input type="radio"  class='status'   name="status" maxlength="60" value="1"/>是<input type="radio"  class='status'   name="status" maxlength="60" value="0"/>否                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">排序</td>
+                <td>
+                   <input type="text" name="sort" maxlength="60" value="{$sort|default=20}" />                    <span class="require-field">*</span>
+                </td>
+            </tr>
+                        <tr>
+                <td colspan="2" align="center"><br />
+                    <input type="hidden" name="id" value="{$id}" />
+                    <input type="submit" class="button ajax-post" value=" 确定 " />
+                    <input type="reset" class="button" value=" 重置 " />
+                </td>
+            </tr>
+        </table>
+    </form>
+</block>
+<block name="js">
+    <script type="text/javascript">
+        $(function(){
+            //>>1.设置默认值
+            <empty name='id'>
+                 //添加时使用一下默认值
+                $('.attribute_type').val([1]);
+                $('.input_type').val([1]);
+                $('.option_value').prop('disabled',true);
+                <else/>
+                 $('.attribute_type').val([{$attribute_type}]);
+                 $('.input_type').val([{$input_type}]);
+                input_type_click();
+                attribute_type_click();
+
+            </empty>
+
+            //>>2.当用户选择录入类型时
+            $('.input_type').click(input_type_click);
+            /**
+             * 根据录入方式实现特效
+             */
+            function input_type_click(){
+                    //>>1.当用户选择单值时.
+                    var attribte_type = $('.attribute_type:checked').val();
+                    var input_type = $('.input_type:checked').val();
+                    if(attribte_type==1){
+                        if(input_type==1 || input_type==3){
+                            //如果不是从下拉框中选择, 那么要禁用可选值
+                            $('.option_value').prop('disabled',true);
+                        }else{
+                            //如果是从下面的列表中选择, 需要打开可选值
+                            $('.option_value').prop('disabled',false);
+                        }
+                    }
+            }
+
+            //在类型上加上点击事件
+            $('.attribute_type').click(attribute_type_click);
+            //点击类型时实现js特效
+            function attribute_type_click(){
+                var attribute_type = $('.attribute_type:checked').val();
+                if(attribute_type ==2){
+                    //如果是多值的情况下 将 录入方式设置为  从下面的列表中选择 ,并且打开可选值的禁用状态
+                    $('.input_type').val([2]);
+                    $('.option_value').prop('disabled',false);
+
+                    $('.input_type:not(:checked)').prop('disabled',true);
+                }else{
+                    //如果是单值, 将金庸状态打开
+                    $('.input_type').prop('disabled',false);
+                }
+            }
+
+        });
+    </script>
+</block>

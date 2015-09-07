@@ -1,0 +1,63 @@
+<?php
+<extend name="Common:index"/>
+<block name="add">
+    <span class="action-span"><a href="{:U('add',array('goods_type_id'=>I('get.goods_type_id')))}">添加{$meta_title}</a></span>
+</block>
+
+<block name="search">
+    <div class="form-div">
+        <form action="{:U()}" name="searchForm">
+            <img src="__IMG__/icon_search.gif" width="26" height="22" border="0" alt="search" />
+            {:arr2select('goods_type_id',$goodsTypes,I('get.goods_type_id',''))}
+        </form>
+    </div>
+</block>
+<block name="list">
+    <div class="list-div" id="listDiv">
+        <input  type="button" value=" 删除 " url="{:U('changeStatus')}"   class="button ajax-post">
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th width="10px">全选<input type="checkbox" class="check_all"></th>
+                                <th>名称 </th>
+                                <th>类型 </th>
+                                <th>录入方式 </th>
+                                <th>可选值 </th>
+                                <th>简介 </th>
+                                <th>状态 </th>
+                                <th>排序 </th>
+                                <th>操作</th>
+            </tr>
+            <volist name="rows" id="row">
+                <tr>
+                    <td align="center"><input type="checkbox" name="id[]" class="id" value="{$row.id}"></td>
+                    <td class="first-cell">
+                        <span style="float:right">{$row.name}</span>
+                    </td>
+<td align="center">{$row.attribute_type}</td>
+<td align="center">{$row.input_type}</td>
+<td align="center">{$row.option_value}</td>
+<td align="center">{$row.intro}</td>
+<td align="center"><a class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id'],'status'=>1-$row['status']))}"><img src="__IMG__/{$row.status}.gif"/></a></td>
+<td align="center">{$row.sort}</td>
+                    <td align="center">
+                        <a href="{:U('edit',array('id'=>$row['id']))}" title="编辑">编辑</a> |
+                        <a  class="ajax-get" href="{:U('changeStatus',array('id'=>$row['id']))}" title="移除">移除</a>
+                    </td>
+                </tr>
+            </volist>
+        </table>
+        <div id="turn-page" class="page">{$pageHtml}</div>
+    </div>
+</block>
+<block name="js">
+    <script type="text/javascript">
+        $(function(){
+
+            $('.goods_type_id').change(function(){
+                var goods_type_id = $(this).val();
+
+                window.location.href="{:U('index')}?goods_type_id="+goods_type_id;
+            });
+        });
+    </script>
+</block>

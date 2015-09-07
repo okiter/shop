@@ -95,6 +95,13 @@ class GoodsController extends BaseController
         $memberLevels = $memberLevelModel->getList('id,name');
         $this->assign('memberLevels',$memberLevels);
 
+        //>>5.查询出所有的类型
+        $goodsTypeModel = D('GoodsType');
+        $goodsTypes = $goodsTypeModel->getList('id,name');
+        $this->assign('goodsTypes',$goodsTypes);
+
+
+
     }
 
 

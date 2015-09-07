@@ -131,8 +131,48 @@ class GoodsModel extends BaseModel
             $this->rollback();
             return false;
         }
+        //>>7.处理商品属性
+        $result = $this->handleGoodsAttribute($id,$requestData['goods_attribute']);
+        if($result===false) {
+            $this->error = '处理商品属性!';
+            $this->rollback();
+            return false;
+        }
 
         return $this->commit();//提交事务
+    }
+
+
+    /**
+     * 保存商品属性
+     * @param $id
+     * @param $goods_attribute
+     */
+    private function handleGoodsAttribute($id,$goods_attributes){
+        if(empty($goods_attributes)){
+            return false;
+        }
+
+        //构建数据
+        $rows = array();
+        foreach($goods_attributes as $attribute_id =>$value){
+            if(is_array($value)){
+                //多值属性的话,需要将每一个值都保存为一行记录
+                foreach($value as $v){
+                    $rows[] = array('goods_id'=>$id,'attribute_id'=>$attribute_id,'value'=>$v);
+                }
+            }else{
+                //单值属性的话, 直接将值保存到一行记录中
+                $rows[] = array('goods_id'=>$id,'attribute_id'=>$attribute_id,'value'=>$value);
+            }
+        }
+
+        //保存
+        if(!empty($rows)){
+            $goodsAttributeModel = M('GoodsAttribute');
+            return $goodsAttributeModel->addAll($rows);
+        }
+
     }
 
 
@@ -149,14 +189,17 @@ class GoodsModel extends BaseModel
     }
      */
     private function handleMemberPrice($goods_id,$member_goods_prices){
+        //>>1.删除会员价格
+        $memberGoodsPriceModel = M('MemberGoodsPrice');
+        $memberGoodsPriceModel->where(array('goods_id'=>$goods_id))->delete();
 
+
+        //>>2.再将会员价格添加到数据库中
         $rows = array();
         foreach($member_goods_prices as $member_level_id=>$price){
             $rows[] =  array('member_level_id'=>$member_level_id,'price'=>$price,'goods_id'=>$goods_id);
         }
-
         if(!empty($rows)){
-            $memberGoodsPriceModel = M('MemberGoodsPrice');
             return $memberGoodsPriceModel->addAll($rows);
         }
     }
@@ -235,11 +278,41 @@ class GoodsModel extends BaseModel
                 //将$memberGoodsPrices中的member_level_id 作为索引, price作为索引的值
                 $member_level_ids = array_column($memberGoodsPrices,'member_level_id');
                 $prices = array_column($memberGoodsPrices,'price');
-
                 $memberGoodsPrices = array_combine($member_level_ids,$prices);
                 $goods['memberGoodsPrices'] = $memberGoodsPrices;
+
+                /**
+                 * $memberGoodsPrices的数据结构为:
+                 *
+                 * array('member_level_id的值'=>price)
+                 */
             }
 
+
+            //>>5.根据当前商品的属性类型的id,查询出来从attribute表中查询出属性
+            $attributes  = D('Attribute')->getByGoodsTypeId($goods['goods_type_id']);
+            $goods['attributes'] = json_encode($attributes);
+
+            //>>6.查询出当前商品的属性值
+            /**
+             *[
+                array( 'attribute'=>1, value=>S,)
+                array('attribute'=>1, value=>M,)
+                array(attribute'=>2, value=>黑色,)
+                array(attribute'=>2, value=>蓝色,)
+                array(attribute'=>3, value=>蚕丝,)
+            ]
+             将上面的数组转换为 下面的数组
+                1=>['S','M'],
+                2=>['黑色','蓝色']
+                3=>['蚕丝']
+             */
+            $goodsAttributes = M('GoodsAttribute')->field('attribute_id,value')->where(array('goods_id'=>$id))->select();
+            $temps = array();
+            foreach($goodsAttributes as $goodsAttribute){
+                $temps[$goodsAttribute['attribute_id']][] = $goodsAttribute['value'];
+            }
+            $goods['goods_attributes'] = json_encode($temps);
         }
 
         return $goods;
@@ -282,8 +355,13 @@ class GoodsModel extends BaseModel
             $this->rollback();
             return false;
         }
-
-
+        //>>6.处理会员商品价格
+        $result = $this->handleMemberPrice($requestData['id'],$requestData['member_goods_price']);
+         if($result===false){
+             $this->error = '更新会员价格失败!';
+             $this->rollback();
+             return false;
+         }
         return $this->commit();
     }
 }
