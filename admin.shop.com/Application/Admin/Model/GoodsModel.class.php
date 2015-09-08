@@ -362,6 +362,114 @@ class GoodsModel extends BaseModel
              $this->rollback();
              return false;
          }
+
+
+        //>>7.更新时处理商品属性
+        $result = $this->handleUpdateGoodsAttribute($requestData['id'],$requestData['goods_attribute']);
+        if($result===false){
+            $this->error = '更新属性失败!';
+            $this->rollback();
+            return false;
+        }
+
         return $this->commit();
+    }
+
+
+    /**
+     * 单值属性的处理方式
+     *   直接将值更新到当前商品的属性值上.
+     *
+     * 多值属性的处理方式
+     *   请求中有,数据库中没有,  需要将请求中的其添加到数据库中
+     *   请求中有,数据库中也有,  不需要更新
+     *   请求中没有有,数据库有,  需要从数据库中删除
+     *   请求中没有有,数据库没有有, 不需要管..
+     *
+     * 更新商品属性
+     * @param $goods_id
+     * @param $goods_attributes
+     */
+    private function handleUpdateGoodsAttribute($goods_id,$goods_attributes){
+        $goodsAttributeModel = M('GoodsAttribute');
+
+
+        //数据库中的多值属性的值
+        $sql = "SELECT obj.attribute_id,obj.value FROM `goods_attribute` as obj join attribute as a on obj.attribute_id = a.id where a.attribute_type=2 and obj.goods_id = $goods_id";
+        $dbGoodsAttributes = $this->query($sql);
+
+        //>>1.循环每个属性, 检查是否为单值或者是多值
+        foreach($goods_attributes as $attribute_id => $requestValues){
+            //>>2.判断values是否为数组,如果是数组说明是多值, 如果是非数组是单值属性
+            if(!is_array($requestValues)){
+                //>>3.单值属性直接更新到数据库中
+                $result = $goodsAttributeModel->where(array('goods_id'=>$goods_id,'attribute_id'=>$attribute_id))->save(array('value'=>$requestValues));
+                if($result===false){
+                    return false;
+                }
+            }else{
+                //>>4.多值属性需要,进一步处理
+                    foreach($requestValues as $requestValue){
+                        //>>4.1 请求中有,数据库中没有,  需要将请求中的其添加到数据库中
+                            //>>a.检查该值是否中数据库中存在
+                            $result = $goodsAttributeModel->where(array('goods_id'=>$goods_id,'attribute_id'=>$attribute_id,'value'=>$requestValue))->find();
+                            //>>b.不存在保存到数据库中
+                            if(empty($result)){
+                               $result =  $goodsAttributeModel->add(array('goods_id'=>$goods_id,'attribute_id'=>$attribute_id,'value'=>$requestValue));
+                                if($result===false){
+                                    return false;
+                                }
+                            }else{
+                               //>> 请求中有,数据库中也有,  不需要更新
+                            }
+                    }
+
+
+
+
+                //>>4.2 请求中没有,数据库有,  需要从数据库中删除 , 使用数据库中的值和请求中的值进行对比.
+                //>>a.需要将数据库中的多值属性查询出来
+//                                  $dbGoodsAttributes
+                //>>b.和请求中的多值属性进行对比
+                foreach($dbGoodsAttributes as $dbGoodsAttribute){
+                     //要和请求中的属性对应的值进行对比..
+                    if($attribute_id == $dbGoodsAttribute['attribute_id']){
+                        if(!in_array($dbGoodsAttribute['value'],$requestValues)){
+                            $result = $goodsAttributeModel->where(array('goods_id'=>$goods_id,'attribute_id'=>$attribute_id,'value'=>$dbGoodsAttribute['value']))->delete();
+                            if($result===false){
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //>>4.解决请求中没有选中的多值属性
+            //>>a.数据库中的多值属性id
+             $db_attribute_ids =  array_column($dbGoodsAttributes,'attribute_id');
+            //>>b.请求中的属性的id
+             $request_attribute_ids = array_keys($goods_attributes);
+           /*  foreach($db_attribute_ids as $db_attribute_id){
+                    if(!in_array($db_attribute_id,$request_attribute_ids)){
+                        //>>c.将该属性的所有的值从数据库中删除
+                        $result = $goodsAttributeModel->where(array('goods_id'=>$goods_id,'attribute_id'=>$db_attribute_id))->delete();
+                        if($result===false){
+                            return false;
+                        }
+                    }
+             }*/
+            $diff_attribute_ids = array_diff($db_attribute_ids,$request_attribute_ids);
+            if(!empty($diff_attribute_ids)){
+                $result = $goodsAttributeModel->where(array('goods_id'=>$goods_id,'attribute_id'=>array('in',$diff_attribute_ids)))->delete();
+                if($result===false){
+                    return false;
+                }
+            }
+
+
+
+
     }
 }
